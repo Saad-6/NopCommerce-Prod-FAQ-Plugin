@@ -1,0 +1,259 @@
+@using Nop.Plugin.F.A.Q.Models
+@model JointQuestionModel
+@{
+    Layout = "_AdminLayout";
+    
+}
+<div class="container">
+    <div style="margin-bottom: 20px;">
+        <h2>Manage FAQs</h2>
+    </div>
+
+    <div style="background-color: white; padding: 5px; border-radius: 5px; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);margin-bottom:10px;">
+        <ul class="nav nav-tabs" id="faqTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="unanswered-questions-tab" data-toggle="tab" href="#unanswered-questions" role="tab" aria-controls="unanswered-questions" aria-selected="true">Unanswered Questions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="answered-questions-tab" data-toggle="tab" href="#answered-questions" role="tab" aria-controls="answered-questions" aria-selected="false">Answered Questions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="all-questions-tab" data-toggle="tab" href="#all-questions" role="tab" aria-controls="all-questions" aria-selected="false">All Questions</a>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3" id="faqTabContent">
+           
+            <div class="tab-pane fade show active" id="unanswered-questions" role="tabpanel" aria-labelledby="unanswered-questions-tab">
+                @Html.Partial("~/Plugins/F.A.Q/Views/_UnansweredQuestions.cshtml", Model.Unanswered)
+            </div>
+            <div class="tab-pane fade" id="answered-questions" role="tabpanel" aria-labelledby="answered-questions-tab">
+                @Html.Partial("~/Plugins/F.A.Q/Views/_AnsweredQuestions.cshtml", Model.Answered)
+            </div>
+            <div class="tab-pane fade" id="all-questions" role="tabpanel" aria-labelledby="all-questions-tab">
+                @Html.Partial("~/Plugins/F.A.Q/Views/_AllQuestions.cshtml", Model.All)
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for CRUD operations -->
+<!-- Common Modal -->
+<div id="editAnswerModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Answer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="faqId" />
+                <input type="hidden" id="viewName" />
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="answerText">Answer:</label>
+                    <span style="display:none;"  id="validation" class="text-danger">Field is required</span>
+                    <textarea required id="answerText" oninput="removeValidation()" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="saveAnswer()">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="deleteConfirmModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this FAQ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="deleteFAQ()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+      <script asp-location="Footer">
+
+     function handleSearch(viewName) {
+         console.log("Entered searcch with view name being " + viewName);
+         console.log("ID: " + "#" + viewName + "Param");
+        
+       var token = getAntiForgeryToken();
+        const query = $('#' + viewName + 'Param').val();
+        console.log(query)
+        $.ajax({
+            url: '@Url.Action("ReturnPartialView", "FAQAdmin")',
+            type: 'POST',
+            data: {
+                view: viewName,
+                pageNumber: 1,
+                pageSize: 0,
+                productName: query,
+                __RequestVerificationToken: token
+            },
+            success: function (response) {
+
+                console.log("Success Search");
+                updateContent(viewName, response);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error: " + error);
+            }
+        });
+     }
+    function handleChange(page, viewName) {
+        console.log("Entered handleChange with page: " + page + " and viewName: " + viewName);
+        var token = getAntiForgeryToken();
+        var size = $('#' + viewName).val();
+        console.log("Selected pageSize: " + size);
+
+        $.ajax({
+            url: '@Url.Action("ReturnPartialView", "FAQAdmin")',
+            type: 'POST',
+            data: {
+                view: viewName,
+                pageNumber: page,
+                pageSize: size,
+                __RequestVerificationToken: token
+            },
+            success: function (response) {
+                console.log("View Name in success = " + viewName);
+                updateContent(viewName, response);
+            },
+            error: function (xhr) {
+                console.log("load page error");
+                console.error("Error loading page: ", xhr);
+            }
+        });
+    }
+    function getAntiForgeryToken() {
+        return $('input[name="__RequestVerificationToken"]').val();
+    }
+    function loadPage(page, viewName) {
+        console.log("Entered load page");
+        var token = getAntiForgeryToken();
+        $.ajax({
+            url: '@Url.Action("ReturnPartialView", "FAQAdmin")',
+            type: 'POST',
+            data: {
+                view: viewName,
+                pageNumber: page,
+                pageSize: 5,
+                __RequestVerificationToken: token
+            },
+            success: function (response) {
+
+                console.log("View Name in success = " + " " + viewName);
+                updateContent(viewName, response);
+            
+            },
+            error: function (xhr) {
+                console.log(" load page error ");
+                console.error("Error loading page: ", xhr);
+            }
+        });
+    }
+
+    $(document).on('click', '.page-link', function (e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        var viewName = $(this).data('view');
+        loadPage(page, viewName);
+    });
+
+
+    function openEditModal(question, id, answer = '', viewName = '') {
+        $('#questionText').text(question); 
+        $('#answerText').val(answer);
+        $('#faqId').val(id);
+        $('#viewName').val(viewName);
+        $('#editAnswerModal').modal('show');
+    }
+    function removeValidation() {
+              console.log("Enetere validation removal")
+        document.getElementById("validation").textContent = "";
+
+      }
+    function saveAnswer() {
+        var id = $('#faqId').val();
+        console.log("FAQ id: " + id);
+        var answer = $('#answerText').val();
+        console.log("Answer: " + answer);
+        var viewName = $('#viewName').val();
+        console.log("View: " + viewName);
+        var token = getAntiForgeryToken();
+        if (answer
+            === "") {
+            const element = document.getElementById('validation');
+            element.style.display = 'block';
+            
+            return false;
+        }
+        $.ajax({
+            url: '@Url.Action("UpdateAnswer", "FAQAdmin")',
+            type: 'POST',
+            data: { faqId: id, answer: answer, view: viewName, __RequestVerificationToken: token },
+            success: function (response) {
+                $('#editAnswerModal').modal('hide');
+                console.log("View Name in success = "+ " "+ viewName);
+                updateContent(viewName, response);
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error: " + status + ' - ' + error);
+            }
+        });
+    }
+    function confirmDelete(id) {
+        faqIdToDelete = id;
+        $('#deleteConfirmModal').modal('show');
+    }
+    function deleteFAQ() {
+        $.ajax({
+            url: '@Url.Action("Delete", "FAQAdmin")', 
+            type: 'POST',
+            data: { id: faqIdToDelete, __RequestVerificationToken: getAntiForgeryToken() },
+            success: function (response) {
+                $('#deleteConfirmModal').modal('hide');
+                
+                $('#all-questions').html(response);
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error: " + status + ' - ' + error);
+                $('#deleteConfirmModal').modal('hide');
+            }
+        });
+    }
+
+    function updateContent(viewName, response) {
+        console.log("View Name in success = " + " " + viewName);
+        if (viewName === '_UnansweredQuestions') {
+            console.log("view is unanswered");
+            $('#unanswered-questions').html(response);
+        } else if (viewName === '_AnsweredQuestions') {
+            $('#answered-questions').html(response);
+            console.log("view is answered");
+        } else if (viewName === '_AllQuestions') {
+            console.log("view is all");
+            $('#all-questions').html(response);
+        } else {
+            console.log("its none of the above");
+        }
+    }
+    </script>

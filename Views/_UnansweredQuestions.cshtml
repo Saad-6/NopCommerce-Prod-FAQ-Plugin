@@ -1,0 +1,71 @@
+@using Nop.Core.Domain.Catalog
+@model PaginatedList<QuestionsViewModel>
+@{
+    string view = "_UnansweredQuestions";
+    
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Product Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <div style="display: flex; align-items: center; gap: 10px; margin:10px">
+            <div style="display: flex; align-items: center; margin: 0;">
+                <label for="pageSize" style="margin-right: 10px;">Items per page:</label>
+                <select style="max-width:70px; display: inline-block;" onchange="handleChange(1, '@view')" id="@view" class="form-control">
+                    <option value="">@ViewBag.pageSize</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="0">Show All</option>
+                </select>
+            </div>
+            <div style="display: flex; align-items: center; margin: 0;">
+
+                <input hidden name="view" id="filterView" value="@view" />
+                <label for="productQuery" style="margin-right: 10px;"></label>
+                <input class="form-control" id="@($"{view}Param")" placeholder="Search by Product Name" name="productName" required style="margin-right: 10px;" />
+                <button class="btn btn-secondary" onclick="handleSearch('@view')" >Search</button>
+
+            </div>
+        </div>
+        @foreach (var faq in Model.Items)
+        {
+            <tr>
+                <td>@faq.Question</td>
+                <td>@faq.ProductName  </td>
+                <td>
+            
+                    <button class="btn btn-success" onclick="openEditModal('@faq.Question', '@faq.Id', '', '_UnansweredQuestions')">Give Answer</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<nav>
+    <ul class="pagination">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="@(Model.PageIndex - 1)" data-view="@view">Previous</a>
+            </li>
+        }
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                <a class="page-link" href="#" data-page="@i" data-view="@view">@i</a>
+            </li>
+        }
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="@(Model.PageIndex + 1)" data-view="@view">Next</a>
+            </li>
+        }
+    </ul>
+</nav>
