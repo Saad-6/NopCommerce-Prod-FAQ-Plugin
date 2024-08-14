@@ -11,7 +11,7 @@ public class PaginatedList<T>
         TotalPages = (int)Math.Ceiling(count / (double)pageSize);
         Items = items;
     }
-
+    public bool ShowPages => TotalPages > 1;
     public bool HasPreviousPage => PageIndex > 1;
     public bool HasNextPage => PageIndex < TotalPages;
 }

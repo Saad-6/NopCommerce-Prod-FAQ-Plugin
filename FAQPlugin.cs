@@ -44,11 +44,11 @@ public class FAQPlugin : BasePlugin, IWidgetPlugin, IAdminMenuPlugin
 
     public bool HideInWidgetList => false;
 
-    //public override string GetConfigurationPageUrl()
-    //{
+    public override string GetConfigurationPageUrl()
+    {
 
-    //    return $"{_webHelper.GetStoreLocation()}Admin/Admin/Configure";
-    //}
+        return $"{_webHelper.GetStoreLocation()}Admin/Dashboard/Configure";
+    }
 
     public Type GetWidgetViewComponent(string widgetZone)
     {

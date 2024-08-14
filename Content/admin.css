@@ -1,0 +1,30 @@
+﻿.cursor-pointer{
+    cursor:pointer;
+}
+.br-5{
+border-radius:5px;
+}
+.faq-question {
+  background-color: #f8f9fa;
+  padding: 10px;
+}
+.success-message {
+  display: none;
+  max-width: 400px;
+  margin: 20px;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+}
+.heading-container{
+    margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.check{
+    margin-top:30px;
+}

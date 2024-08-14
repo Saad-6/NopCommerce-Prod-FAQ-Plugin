@@ -13,15 +13,20 @@ public class FAQRepository : IFAQRepository
         _dataContext = new MsSqlNopDataProvider();
         _repository = repository;
     }
-    public IList<FAQEntity> GetFAQ(FAQType type = FAQType.All, int pageSize = 0, int startIndex = 0, SortExpression sortExpression = SortExpression.QuestionAsc, int productId = 0)
+    public IList<FAQEntity> GetFAQ(FAQType type = FAQType.All, int pageSize = 0, int startIndex = 0, SortExpression sortExpression = SortExpression.LastModified, int productId = 0, string productName = "" )
     {
         var query = _dataContext.GetTable<FAQEntity>().AsQueryable();
         if (productId > 0)
         {
             query = query.Where(f => f.ProductId == productId);
         }
-        query = sortExpression switch
+        if (!string.IsNullOrEmpty(productName))
         {
+            query = query.Where(f => f.ProductName.Contains(productName));
+        }
+        query = sortExpression switch 
+        {
+            SortExpression.LastModified=>query.OrderByDescending(f=>f.LastModified),
             SortExpression.QuestionAsc => query.OrderBy(f => f.Question),
             SortExpression.QuestionDesc => query.OrderByDescending(f => f.Question),
             SortExpression.UpvotesAsc => query.OrderBy(f => f.Upvotes),
@@ -65,7 +70,7 @@ public class FAQRepository : IFAQRepository
         return true;
     }
 
-    public int GetCount(FAQType type = FAQType.All, int productId = 0)
+    public int GetCount(FAQType type = FAQType.All, int productId = 0,string productName = "")
     {
         var query = _dataContext.GetTable<FAQEntity>().AsQueryable();
         if (type == FAQType.Answered)
@@ -80,6 +85,10 @@ public class FAQRepository : IFAQRepository
         {
             query = query.Where(m => m.ProductId == productId);
         }
+        if (!string.IsNullOrEmpty(productName))
+        {
+            query = query.Where(m=>m.ProductName == productName);
+        }
         return query.Count();
     }
 
@@ -90,10 +99,11 @@ public class FAQRepository : IFAQRepository
         return faq;
     }
 
-    public IList<FAQEntity> LoadForProduct(int id)
+    public IList<FAQEntity> LoadForProduct(int id, bool visibility)
     {
         var query = _dataContext.GetTable<FAQEntity>().AsQueryable();
         query = query.Where(m => m.Answer != null);
+        query = query.Where(m=>m.Visibility == visibility);
         return query.Where(m => m.ProductId == id).ToList<FAQEntity>();
     }
 }

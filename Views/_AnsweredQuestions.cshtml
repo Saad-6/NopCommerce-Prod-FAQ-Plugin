@@ -1,72 +1,140 @@
-﻿@model PaginatedList<QuestionsViewModel>
+@model PaginatedList<FAQEntity>
+
 @{
     string view = "_AnsweredQuestions";
 }
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Question</th>
-            <th>Answer</th>
-            <th>Product Name</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <div style="display: flex; align-items: center; gap: 10px;margin:10px">
-            <div style="display: flex; align-items: center; margin: 0;">
-                <label for="pageSize" style="margin-right: 10px;">Items per page:</label>
-                <select style="max-width:70px; display: inline-block;" onchange="handleChange(1, '@view')" id="@view" class="form-control">
-                    <option value="">@ViewBag.pageSize</option>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                    <option value="0">Show All</option>
-                </select>
-            </div>
-            <div style="display: flex; align-items: center; margin: 0;">
 
-                <input hidden name="view" id="filterView" value="@view" />
-                <label for="productQuery" style="margin-right: 10px;"></label>
-                <input class="form-control" id="@($"{view}Param")" placeholder="Search by Product Name" name="productName" required style="margin-right: 10px;" />
-                <button class="btn btn-secondary" onclick="handleSearch('@view')">Search</button>
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-body">
+           
 
+            <!-- Filters -->
+            <div style="display:flex; justify-content:space-evenly; align-items:center; align-content:center; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label for="pageSize" style="margin-right: 10px;">Items per page:</label>
+                    <input id="pageSize+@view" hidden value="@ViewBag.pageSize" />
+                    <select style="max-width:70px; display: inline-block;" onchange="handleChange(1, '@view')" id="@view" class="form-control">
+                        <option >@ViewBag.pageSize</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="0">Show All</option>
+                    </select>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <input hidden name="view" id="filterView" value="@view" />
+                    <input class="form-control" id="@($"{view}Param")" placeholder="Search by Product Name" name="productName" required style="margin-right: 10px;" />
+                    <button class="btn btn-secondary" onclick="handleChange(1, '@view')">Search</button>
+                </div>
             </div>
+
+            @if (Model.Items.Count < 1)
+            {
+                <div style="height: 80vh; display: flex; align-items: center; justify-content: center;">
+                    <h3 class="text-center mt-3 pt-3">No Questions Found</h3>
+                </div>
+            }
+            else
+            {
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <b> 
+                        Questions
+                        </b>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <b>
+                                    Product
+                                </b>
+                            </div>
+                            <div class="col-md-4">
+                                <b>
+                                    Last Modified
+                                </b>
+                            </div>
+                            <div class="col-md-4">
+                                <b>
+                                    Actions
+                                </b>
+                            </div>
+
+
+                            </div>
+                    </div>
+                </div>
+                @foreach (var faq in Model.Items)
+                {
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="faq-question br-5 cursor-pointer" onclick="toggleAnswer(@faq.Id)">
+                                <span>@faq.Question</span>
+                                <i class="fas fa-chevron-down float-right"></i>
+                            </div>
+                            <div id="answer-@faq.Id" class="faq-answer" style="display: none; margin-top: 10px; padding: 10px; border: 1px solid #dee2e6; border-radius: 5px;">
+                                @faq.Answer
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <a target="_blank" href="@Url.Action("Edit", "Product", new { id = faq.ProductId })">@faq.ProductName</a>
+                                </div>
+                                <div class="col-md-4">
+                                    @faq.LastModified
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <button class="btn btn-secondary mb-2" onclick="openEditModal('@faq.Question', '@faq.Id', '@faq.Answer', '@view')">Edit Answer</button>
+                                    </div>
+                                    <div class="row">
+                                        <button class="btn btn-danger btn-sm mb-2" onclick="confirmDelete('@faq.Id','@view')">Delete</button>
+                                    </div>
+                                    <div class="row">
+                                   
+                                        <button class="btn btn-primary btn-sm" onclick="toggleVisibility('@faq.Id','@view','@faq.Visibility')">Visibility: @faq.Visibility<i class="fa @(faq.Visibility ? "fa-eye" : "fa-eye-slash")"></i></button>
+                                    </div>
+                                   
+                                   
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+            <!-- Pagination -->
+            @if (Model.ShowPages)
+            {
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        @if (Model.HasPreviousPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="#" data-page="@(Model.PageIndex - 1)" data-view="@view">Previous</a>
+                            </li>
+                        }
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                                <a class="page-link" href="#" data-page="@i" data-view="@view">@i</a>
+                            </li>
+                        }
+                        @if (Model.HasNextPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="#" data-page="@(Model.PageIndex + 1)" data-view="@view">Next</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
         </div>
-        @foreach (var faq in Model.Items)
-        {
-            <tr>
-                <td>@faq.Question</td>
-                <td>@faq.Answer</td>
-                <td>@faq.ProductName</td>
-                <td>
-                    <input type="hidden" id="viewName" value="@view" />
-                    <button class="btn btn-secondary" onclick="openEditModal('@faq.Question', '@faq.Id', '@faq.Answer', '@view')">Edit Answer</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<nav>
-    <ul class="pagination">
-        @if (Model.HasPreviousPage)
-        {
-            <li class="page-item">
-                <a class="page-link" href="#" data-page="@(Model.PageIndex - 1)" data-view="@view">Previous</a>
-            </li>
-        }
-        @for (int i = 1; i <= Model.TotalPages; i++)
-        {
-            <li class="page-item @(Model.PageIndex == i ? "active" : "")">
-                <a class="page-link" href="#" data-page="@i" data-view="@view">@i</a>
-            </li>
-        }
-        @if (Model.HasNextPage)
-        {
-            <li class="page-item">
-                <a class="page-link" href="#" data-page="@(Model.PageIndex + 1)" data-view="@view">Next</a>
-            </li>
-        }
-    </ul>
-</nav>
+    </div>
+</div>

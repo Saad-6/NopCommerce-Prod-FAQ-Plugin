@@ -9,7 +9,7 @@ public class FAQBuilder : NopEntityBuilder<FAQEntity>
     {
        table.WithColumn(nameof(FAQEntity.Id)).AsInt32().PrimaryKey().Identity()
             .WithColumn(nameof(FAQEntity.Question)).AsString().NotNullable()
-            .WithColumn(nameof(FAQEntity.ProudctName)).AsString().NotNullable() 
+            .WithColumn(nameof(FAQEntity.ProductName)).AsString().NotNullable() 
             .WithColumn(nameof(FAQEntity.Answer)).AsString().Nullable()
             .WithColumn(nameof(FAQEntity.Upvotes)).AsInt32().Nullable()
             .WithColumn(nameof(FAQEntity.ProductId)).AsInt32().NotNullable()

@@ -2,8 +2,19 @@
 @using System.Linq
 
 <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+  
+   
     <h3 id="faq-heading" style="cursor: pointer; margin: 0;">Frequently Asked Questions</h3>
+    @if (Model.AllowAnonymousUsers || (!Model.AllowAnonymousUsers && Model.UserLoggedIn))
+    {
     <button id="askQuestionButton" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Ask a Question</button>
+        
+    }
+    @if(!Model.AllowAnonymousUsers && !Model.UserLoggedIn)
+    {
+        <a href="@Url.Action("Configure","Dashboard")">Login to ask a question</a>
+    }
+
 </div>
 
 <div id="faq-content" style="display: block; padding: 20px;">
@@ -39,9 +50,10 @@
         <form id="questionForm">
             <div class="form-group">
                 <label for="Question">Question:</label>
-                <textarea required id="question" name="question" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px;" placeholder="Your question here ..."></textarea>
+                <textarea maxlength="255" required id="question" name="question" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px;" placeholder="Your question here ..."></textarea>
             </div>
             <input type="hidden" id="productId" name="productId" value="@Model.ProductId" />
+            <input type="hidden" id="productName" name="productName" value="@ViewBag.ProductName" />
             <div style="text-align: center;">
                 <button type="button" id="submitQuestionButton" style="padding: 20px 50px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">Ask</button>
             </div>
@@ -49,7 +61,9 @@
     </div>
 </div>
 
-<div id="successMessage" style="display: none; max-width: 400px; margin: 20px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; text-align: center; border-radius: 5px;">Question submitted successfully!</div>
+<div id="successMessage" style=" display: none;max-width: 400px;margin: 20px;background-color: #d4edda;color: #155724;border: 1px solid #c3e6cb;padding: 10px;text-align: center; border-radius: 5px;" class="success-message">
+    <h4>Your question has been received and is currently under review. We'll provide an answer as soon as possible.</h4>
+    </div>
 
 <script asp-location="Footer">
 
@@ -59,13 +73,15 @@
             event.preventDefault();
             var question = $('#question').val();
             var productId = $('#productId').val();
+            var productName = $('#productName').val();
             var formData = $(this).serialize();
             $.ajax({
                 type: 'POST',
                 url: '/Retail/AddQuestion',
                 data: {
-                    question: question, // Name should match the action parameter names
-                    productId: productId // Name should match the action parameter names
+                    question, // Name should match the action parameter names
+                    productId,
+                    productName// Name should match the action parameter names
                 },
                 success: function (response) {
                     console.log("Success");

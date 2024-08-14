@@ -16,13 +16,18 @@
   </PropertyGroup>
   <ItemGroup>
 
+    <None Remove="Content\admin.css" />
+
     <None Remove="plugin.json" />
     <None Remove="Views\AdminIndex.cshtml" />
+    <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\List.cshtml" />
+    <None Remove="Views\OutdatedAnsweredQuestions.cshtml" />
     <None Remove="Views\Shared\_AdminLayout.cshtml" />
     <None Remove="Views\Shared\_AdminPopupLayout.cshtml" />
     <None Remove="Views\_AllQuestions.cshtml" />
     <None Remove="Views\_AnsweredQuestions.cshtml" />
+    <None Remove="Views\_Configure.cshtml" />
     <None Remove="Views\_FAQWidget.cshtml" />
     <None Remove="Views\_UnansweredQuestions.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
@@ -41,10 +46,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Content\admin.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Configure.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\_AllQuestions.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\_AnsweredQuestions.cshtml">
+    <Content Include="Views\OutdatedAnsweredQuestions.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -68,12 +79,19 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\_Configure.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
 
     <Content Include="Views\_FAQWidget.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
 
     <Content Include="Views\AdminIndex.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Include="Views\_AnsweredQuestions.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_UnansweredQuestions.cshtml">

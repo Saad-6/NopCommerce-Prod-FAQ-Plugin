@@ -15,47 +15,21 @@ public static class Utilities
         };
         return type;
     }
-    public static IList<QuestionsViewModel> MapViewModel(IList<FAQEntity> list, IProductService service, string query = "")
+    // No mapping required as of now since we need every attribute in the FAQ Entity in our views
+    public static IList<QuestionsViewModel> MapToViewModel(IList<FAQEntity> list)
     {
         IList<QuestionsViewModel> questionsViewModels = new List<QuestionsViewModel>();
-        Dictionary<int, string> productCache = new Dictionary<int, string>();
-
-        foreach (var question in list)
+        foreach (var item in list)
         {
-            var mapped = new QuestionsViewModel
-            {
-                Question = question.Question,
-                Answer = question.Answer,
-                ProductId = question.ProductId,
-                Id = question.ProductId
-            };
-            if (productCache.TryGetValue(question.ProductId, out var productName))
-            {
-                mapped.ProductName = productName;
-            }
-            else
-            {
-             //   service.SearchProductsAsync(keywords: ).Wait();
-                var product = service.GetProductByIdAsync(question.ProductId).Result;
-                if (product != null)
-                {
-                    mapped.ProductName = product.Name;
-                    productCache[question.ProductId] = product.Name;
-                }
-            }
-            if (!string.IsNullOrEmpty(query))
-            {
-                if(mapped.ProductName.Contains(query, StringComparison.OrdinalIgnoreCase))
-                {
-                    questionsViewModels.Add(mapped);
-                }
-            }
-            else
-            {
-            questionsViewModels.Add(mapped);
-
-            }
-
+            var questionModel = new QuestionsViewModel();
+            questionModel.Question = item.Question;
+            questionModel.Answer = item.Answer;
+            questionModel.Id = item.Id;
+            questionModel.ProductName = item.ProductName;
+            questionModel.LastModified = item.LastModified;
+            questionModel.Visibility  = item.Visibility;
+            questionsViewModels.Add(questionModel);
+        
         }
 
         return questionsViewModels;
