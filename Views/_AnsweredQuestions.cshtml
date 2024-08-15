@@ -10,29 +10,36 @@
            
 
             <!-- Filters -->
-            <div style="display:flex; justify-content:space-evenly; align-items:center; align-content:center; margin-bottom: 20px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <label for="pageSize" style="margin-right: 10px;">Items per page:</label>
-                    <input id="pageSize+@view" hidden value="@ViewBag.pageSize" />
-                    <select style="max-width:70px; display: inline-block;" onchange="handleChange(1, '@view')" id="@view" class="form-control">
-                        <option >@ViewBag.pageSize</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="0">Show All</option>
-                    </select>
+            <div class="flex justify-space-evenly align-center">
+
+                <div class="flex align-center g10 m10">
+                    <div class="flex align-center">
+                        <label for="pageSize" class="mx-3">Items per page:</label>
+                        <input id="pageSize+@view" hidden value="@ViewBag.pageSize" />
+                        <select style="max-width:70px; display: inline-block;" onchange="handleChange(1, '@view')" id="@view" class="form-control">
+                            <option>@ViewBag.pageSize</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="0">Show All</option>
+                        </select>
+                    </div>
+                    <div class="flex align-center">
+
+                        <input hidden name="view" id="filterView" value="@view" />
+                        <label for="productQuery" style="margin-right: 10px;"></label>
+                        <input class="form-control" id="@($"{view}Param")" placeholder="Search by Product Name" name="productName" required style="margin-right: 10px;" />
+                        <button class="btn btn-secondary" onclick="handleChange(1, '@view')">Search</button>
+
+                    </div>
                 </div>
-                <div style="display: flex; align-items: center;">
-                    <input hidden name="view" id="filterView" value="@view" />
-                    <input class="form-control" id="@($"{view}Param")" placeholder="Search by Product Name" name="productName" required style="margin-right: 10px;" />
-                    <button class="btn btn-secondary" onclick="handleChange(1, '@view')">Search</button>
-                </div>
+
             </div>
 
             @if (Model.Items.Count < 1)
             {
-                <div style="height: 80vh; display: flex; align-items: center; justify-content: center;">
+                <div class="h-80vh flex align-center justify-content-center">
                     <h3 class="text-center mt-3 pt-3">No Questions Found</h3>
                 </div>
             }
@@ -75,7 +82,7 @@
                                 <span>@faq.Question</span>
                                 <i class="fas fa-chevron-down float-right"></i>
                             </div>
-                            <div id="answer-@faq.Id" class="faq-answer" style="display: none; margin-top: 10px; padding: 10px; border: 1px solid #dee2e6; border-radius: 5px;">
+                            <div id="answer-@faq.Id" class="faq-answer">
                                 @faq.Answer
                             </div>
                         </div>

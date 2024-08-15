@@ -9,6 +9,7 @@ namespace Nop.Plugin.F.A.Q.Domain;
 public class FAQSettings : ISettings
 {
     public bool AllowAnonymousUsersToAskFAQs { get; set; }
+    public string AnsweredBy { get; set; }
     public FAQSettings()
     {
         AllowAnonymousUsersToAskFAQs = true;

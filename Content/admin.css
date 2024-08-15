@@ -8,6 +8,74 @@ border-radius:5px;
   background-color: #f8f9fa;
   padding: 10px;
 }
+.flex{
+    display:flex;
+}
+.justify-space-evenly{
+    justify-content:space-evenly;
+}
+.justify-space-around{
+    justify-content:space-around;
+}
+.justify-space-between {
+  justify-content: space-between;
+}
+.justify-space-center {
+  justify-content: center;
+}
+.align-center{
+    align-items:center;
+ align-content:center;
+}
+.m10{
+    margin:10px;
+}
+.p10{
+    padding:10px;
+}
+.g10{
+    gap:10px;
+}
+.h-80vh{
+    height:80vh;
+}
+.h-100vh {
+  height: 100vh;
+}
+#ask-question-div {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+#askQuestionModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+#askQuestionModalBody {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 500px;
+  position: relative;
+}
+#closeModal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+#question {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
 .success-message {
   display: none;
   max-width: 400px;
@@ -25,6 +93,142 @@ border-radius:5px;
     justify-content:space-between;
     align-items:center;
 }
+#setting{
+margin:10px;
+padding:10px;
+}
 .check{
-    margin-top:30px;
+    margin:30px;
+}
+.faq-answer {
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+}
+
+.faq {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.question, .answer {
+  max-width: 500px;
+  display: grid;
+  grid-template-rows: 50% 50%;
+  height: auto;
+}
+
+.small {
+  color: rgb(136, 130, 130);
+margin-top:auto;
+}
+/* The modal's background overlay */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Darker overlay for better focus on modal */
+  z-index: 999;
+}
+
+/* The modal itself */
+.custom-modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff; /* White background for a clean look */
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners for a modern feel */
+  z-index: 1000;
+  width: 100%;
+  max-width: 700px;
+  height:550px;/* Maximum width to make it look good on larger screens */
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+/* Modal header styling */
+.custom-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0; /* Light grey border for separation */
+  padding-bottom: 10px;
+  margin-bottom: 15px; /* Space between header and body */
+}
+
+  /* Modal title styling */
+  .custom-modal-header h5 {
+    margin: 0;
+    font-size: 1.25rem; /* Slightly larger font size for the title */
+    color: #333; /* Dark grey text color for better readability */
+  }
+
+/* Close button styling */
+.close-button {
+  cursor: pointer;
+  font-size: 1.5rem; /* Larger size for easier clickability */
+  background: none;
+  border: none;
+  color: #999; /* Grey color for a subtle look */
+  transition: color 0.3s ease; /* Smooth transition on hover */
+}
+
+  .close-button:hover {
+    color: #333; /* Darken the close button on hover for interactivity */
+  }
+
+/* Modal body styling */
+.custom-modal-body {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #555; /* Medium grey text for better contrast */
+}
+
+  /* Form elements styling */
+  .custom-modal-body .form-group {
+    margin-bottom: 15px; /* Space between form elements */
+  }
+
+  .custom-modal-body label {
+    font-weight: bold; /* Bold labels for emphasis */
+    margin-bottom: 5px;
+    display: block; /* Block display for better alignment */
+  }
+
+  .custom-modal-body textarea {
+    width: 100%; /* Full width for the textarea */
+    padding: 15px;
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1rem;
+   
+  }
+
+  /* Submit button styling */
+  .custom-modal-body .btn {
+
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+  }
+
+/* Success message styling */
+.success-message {
+  display: none;
+  background-color: #d4edda; /* Greenish background for success */
+  color: #155724; /* Dark green text */
+  padding: 15px;
+  margin-top: 20px;
+  border: 1px solid #c3e6cb; /* Slightly darker border */
+  border-radius: 5px;
+  text-align: center; /* Centered text */
+  font-size: 1rem; /* Standard font size */
 }

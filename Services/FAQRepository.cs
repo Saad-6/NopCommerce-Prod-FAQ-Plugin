@@ -13,13 +13,19 @@ public class FAQRepository : IFAQRepository
         _dataContext = new MsSqlNopDataProvider();
         _repository = repository;
     }
-    public IList<FAQEntity> GetFAQ(FAQType type = FAQType.All, int pageSize = 0, int startIndex = 0, SortExpression sortExpression = SortExpression.LastModified, int productId = 0, string productName = "" )
+    public IList<FAQEntity> GetFAQ(FAQType type = FAQType.All, int pageSize = 0, int startIndex = 0, SortExpression sortExpression = SortExpression.LastModified, int productId = 0, string productName = "",Visibility visibility = Visibility.Undefined)
     {
         var query = _dataContext.GetTable<FAQEntity>().AsQueryable();
         if (productId > 0)
         {
             query = query.Where(f => f.ProductId == productId);
         }
+        query = visibility switch
+        {
+            Visibility.Visible => query.Where(m => m.Visibility == true),
+            Visibility.Hidden => query.Where(m => m.Visibility == false),
+            Visibility.Undefined =>query
+        };
         if (!string.IsNullOrEmpty(productName))
         {
             query = query.Where(f => f.ProductName.Contains(productName));
@@ -70,7 +76,7 @@ public class FAQRepository : IFAQRepository
         return true;
     }
 
-    public int GetCount(FAQType type = FAQType.All, int productId = 0,string productName = "")
+    public int GetCount(FAQType type = FAQType.All, int productId = 0,string productName = "", Visibility visibility = Visibility.Undefined)
     {
         var query = _dataContext.GetTable<FAQEntity>().AsQueryable();
         if (type == FAQType.Answered)
@@ -81,6 +87,12 @@ public class FAQRepository : IFAQRepository
         {
             query = query.Where(f => f.Answer == null);
         }
+        query = visibility switch
+        {
+            Visibility.Visible => query.Where(m => m.Visibility == true),
+            Visibility.Hidden => query.Where(m => m.Visibility == false),
+            Visibility.Undefined=>query
+        };
         if (productId > 0)
         {
             query = query.Where(m => m.ProductId == productId);

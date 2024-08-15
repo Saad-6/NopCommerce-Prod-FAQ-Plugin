@@ -27,7 +27,7 @@ public class ProductViewComponent : NopViewComponent
         _customerService = customerService;
         _workContext = workContext;
     }
-    public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
+    public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData , int pageNumber = 1,int pageSize = 5)
     {
         if (additionalData == null)
             return Content("");
@@ -35,15 +35,18 @@ public class ProductViewComponent : NopViewComponent
         var product = _productService.GetProductByIdAsync(productId);
         if (product == null || product.IsFaulted)
             return Content("");
+        int pageIndex = pageNumber - 1;
+        int startIndex = (pageSize * pageIndex);
         var settings = _settings.LoadSetting<FAQSettings>();
         var customer = EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync();
-        
-        var faqs = _repo.LoadForProduct(productId,true);
-
+        var count = _repo.GetCount(FAQType.Answered,productId,visibility:Visibility.Visible);
+        //var faqs = _repo.LoadForProduct(productId,true);
+        var faqs = _repo.GetFAQ(FAQType.Answered, pageSize, startIndex, SortExpression.LastModified, productId, visibility: Visibility.Visible);
+        var paginatedList = new PaginatedList<FAQEntity>(faqs, count, pageNumber, pageSize);
         var fAQViewModel = new FAQViewModel()
         {
             ProductId = productId,
-            FAQs = faqs,
+            FAQs = paginatedList,
             Question = "N/A",
             ProductName = product.Result.Name,
             AllowAnonymousUsers = settings.AllowAnonymousUsersToAskFAQs,

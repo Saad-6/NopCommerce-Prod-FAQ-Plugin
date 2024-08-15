@@ -25,6 +25,7 @@
     <None Remove="Views\OutdatedAnsweredQuestions.cshtml" />
     <None Remove="Views\Shared\_AdminLayout.cshtml" />
     <None Remove="Views\Shared\_AdminPopupLayout.cshtml" />
+    <None Remove="Views\Shared\_RetailLayout.cshtml" />
     <None Remove="Views\_AllQuestions.cshtml" />
     <None Remove="Views\_AnsweredQuestions.cshtml" />
     <None Remove="Views\_Configure.cshtml" />
@@ -50,6 +51,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Configure.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\_RetailLayout.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_AllQuestions.cshtml">

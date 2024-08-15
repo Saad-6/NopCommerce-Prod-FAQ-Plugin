@@ -8,10 +8,14 @@ public class FAQViewModel
     public bool UserLoggedIn { get; set; }
     public string? Question {  get; set; }
     public string ProductName {  get; set; }
-    public IList<FAQEntity> FAQs { get; set; }
+    public string?UserName { get; set; }
+    public string?AnsweredBy { get; set; }
+    public PaginatedList<FAQEntity> FAQs { get; set; }
     public FAQViewModel()
     {
-        FAQs = new List<FAQEntity>();
+     
+        UserName = "Anonymous";
+        AnsweredBy = "NopTeam";
     }
 }
 public enum FAQType
@@ -35,4 +39,10 @@ public enum Operation
     Create,
     Update,
     Delete,
+}
+public enum Visibility
+{
+    Visible,
+    Hidden,
+    Undefined
 }

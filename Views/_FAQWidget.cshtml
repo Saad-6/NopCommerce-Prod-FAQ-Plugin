@@ -1,18 +1,24 @@
+<div id="faq-widget">
+
 @model FAQViewModel
 @using System.Linq
-
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+    @{
+        Layout = "~/Plugins/F.A.Q/Views/Shared/_RetailLayout.cshtml";
+        string view = "_FAQWidget";
+    }
+<link rel="stylesheet" href="~/Plugins/F.A.Q/Content/admin.css" />
+<div class="flex justify-content-between align-center p10"id="ask-question-div" >
   
    
-    <h3 id="faq-heading" style="cursor: pointer; margin: 0;">Frequently Asked Questions</h3>
+    <h3 id="faq-heading" style="cursor: pointer; margin: 0;">Questions About Product</h3>
     @if (Model.AllowAnonymousUsers || (!Model.AllowAnonymousUsers && Model.UserLoggedIn))
     {
-    <button id="askQuestionButton" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Ask a Question</button>
+        <button id="askQuestionButton" class="btn btn-dark">Ask a Question</button>
         
     }
     @if(!Model.AllowAnonymousUsers && !Model.UserLoggedIn)
     {
-        <a href="@Url.Action("Configure","Dashboard")">Login to ask a question</a>
+        <a href="@Url.Action("Login","Customer")">Login to ask a question</a>
     }
 
 </div>
@@ -20,143 +26,226 @@
 <div id="faq-content" style="display: block; padding: 20px;">
     <!-- Changed display to block -->
     <div id="accordion">
-        @if (Model.FAQs != null && Model.FAQs.Any())
+        @if (Model.FAQs.Items != null && Model.FAQs.Items.Any())
         {
-            foreach (var faq in Model.FAQs)
+            foreach (var faq in Model.FAQs.Items)
             {
-                <div>
-                    <div class="faq-question" style="padding: 10px; cursor: pointer; border-bottom: 1px solid #dee2e6; font-weight: bold; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center;">
-                        @faq.Question <span style="content: ''; display: inline-block; width: 0; height: 0; margin-left: 10px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid black;"></span>
+                <div class="container">
+
+                    <div class="question">
+                        <div class="d-flex">
+
+                            <h5>Q:</h5>
+                            <b class="mx-1">
+                                @faq.Question
+                            </b>
+
+
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small class="small">Asked by : Anonymous</small>
+                            <small class="small">@faq.AskedDate</small>
+                        </div>
                     </div>
-                    <div class="faq-answer" style="padding: 10px; background-color: #f8f9fa; font-style: italic; display: none;">
-                        @faq.Answer
+                    <div class="answer">
+                        <div class="d-flex">
+                            <h5>A:</h5> <p class="mx-1">@faq.Answer</p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p></p>
+                            <small class="small">Answerd By : NopTeam</small>
+                        </div>
                     </div>
+
                 </div>
+              
+                <hr />
+              
             }
         }
         else
         {
-            <div style="padding: 10px; background-color: #f8f9fa;">
+            <div class="p10">
                 No FAQs available.
             </div>
         }
+            <!-- Pagination -->
+            @if (Model.FAQs.ShowPages)
+            {
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        @if (Model.FAQs.HasPreviousPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="#" data-page="@(Model.FAQs.PageIndex - 1)" data-view="@view">Previous</a>
+                            </li>
+                        }
+                        @for (int i = 1; i <= Model.FAQs.TotalPages; i++)
+                        {
+                            <li class="page-item @(Model.FAQs.PageIndex == i ? "active" : "")">
+                                <a class="page-link" href="#" data-page="@i" data-view="@view">@i</a>
+                            </li>
+                        }
+                        @if (Model.FAQs.HasNextPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="#" data-page="@(Model.FAQs.PageIndex + 1)" data-view="@view">Next</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
     </div>
 </div>
 
-<div id="askQuestionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;">
-    <div style="background-color: white; padding: 20px; border-radius: 10px; width: 500px; position: relative;">
-        <span id="closeModal" style="position: absolute; top: 10px; right: 10px; cursor: pointer;">&times;</span>
-        <h4 style="text-align: center;">Ask a Question</h4>
+<!-- Custom Modal Overlay and Content -->
+<div id="modalOverlay" class="modal-overlay"></div>
+<div id="customModal" class="custom-modal">
+    <div class="custom-modal-header">
+        <h5>Ask a Question</h5>
+        <button id="closeModalButton" class="close-button">&times;</button>
+    </div>
+    <div class="custom-modal-body">
         <form id="questionForm">
-            <div class="form-group">
-                <label for="Question">Question:</label>
-                <textarea maxlength="255" required id="question" name="question" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px;" placeholder="Your question here ..."></textarea>
+            <div class="mb-3 form-group">
+                <label for="question" class="form-label">Question:</label>
+                <textarea rows="5" maxlength="255" required id="question" name="question" class="form-control" placeholder="Your question here ..."></textarea>
             </div>
             <input type="hidden" id="productId" name="productId" value="@Model.ProductId" />
             <input type="hidden" id="productName" name="productName" value="@ViewBag.ProductName" />
-            <div style="text-align: center;">
-                <button type="button" id="submitQuestionButton" style="padding: 20px 50px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">Ask</button>
+            <div class="text-center">
+                <button type="button" id="submitQuestionButton" class="btn btn-dark">Ask</button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="successMessage" style=" display: none;max-width: 400px;margin: 20px;background-color: #d4edda;color: #155724;border: 1px solid #c3e6cb;padding: 10px;text-align: center; border-radius: 5px;" class="success-message">
+
+<div id="successMessage"  class="success-message">
     <h4>Your question has been received and is currently under review. We'll provide an answer as soon as possible.</h4>
     </div>
 
+</div>
+
+
 <script asp-location="Footer">
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("Entered DOMContent function");
 
-    $(document).ready(function () {
-        $('#questionForm').submit(function (event) {
-            console.log("Entered in function");
-            event.preventDefault();
-            var question = $('#question').val();
-            var productId = $('#productId').val();
-            var productName = $('#productName').val();
-            var formData = $(this).serialize();
-            $.ajax({
-                type: 'POST',
-                url: '/Retail/AddQuestion',
-                data: {
-                    question, // Name should match the action parameter names
-                    productId,
-                    productName// Name should match the action parameter names
-                },
-                success: function (response) {
-                    console.log("Success");
-                    handleSuccess();
-                },
-                error: function (error) {
-                    console.log("failure");
-                    handleFailure();
+        // Directly using document.getElementById instead of jQuery for consistency
+        const modalOverlay = document.getElementById('modalOverlay');
+        const customModal = document.getElementById('customModal');
+        const askQuestionButton = document.getElementById('askQuestionButton');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const submitQuestionButton = document.getElementById('submitQuestionButton');
+
+        // Ensure all elements exist before adding event listeners
+        if (askQuestionButton && closeModalButton && submitQuestionButton) {
+
+            // Function to show the modal
+            function showModal() {
+                console.log("Entered Show Modal");
+                modalOverlay.style.display = 'block';
+                customModal.style.display = 'block';
+            }
+
+            // Function to hide the modal
+            function hideModal() {
+                console.log("Entered Hide Modal");
+                modalOverlay.style.display = 'none';
+                customModal.style.display = 'none';
+            }
+
+            // Event listener to open the modal
+            askQuestionButton.addEventListener('click', function () {
+                console.log("askQuestion event trigger function");
+                showModal();
+            });
+
+            // Event listener to close the modal
+            closeModalButton.addEventListener('click', function () {
+                hideModal();
+            });
+
+            // Also close the modal when clicking outside of it
+            modalOverlay.addEventListener('click', function () {
+                hideModal();
+            });
+
+            // Handle form submission
+            submitQuestionButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                console.log("Entered Submit Ask function");
+                submitQuestion();
+            });
+            // AJAX form submission logic
+            function submitQuestion() {
+                const question = document.getElementById('question').value;
+                const productId = @Model.ProductId;
+                const productName = document.getElementById('productName').value;
+
+                if (!question.trim()) {
+                    alert('Input Field cannot be empty');
+                    return;
                 }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Retail/AddQuestion',
+                    data: {
+                        question: question,
+                        productId: productId,
+                        productName: productName
+                    },
+                    success: function (response) {
+                        handleSuccess();
+                    },
+                    error: function (error) {
+                        handleFailure();
+                    }
+                });
+            }
+            // AJAX pagination function
+            $(document).on('click', '.page-link', function (e) {
+                e.preventDefault();
+                console.log("Paging event triggered function");
+                var page = $(this).data('page');
+                $.ajax({
+                    url: '@Url.Action("FAQWidget", "Retail")',
+                    type: 'POST',
+                    data: {
+                        productId: @Model.ProductId,
+                        page: page,
+                        size: 5
+                    },
+                    success: function (response) {
+                       
+                        $('#faq-widget').html(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX error: " + status + ' - ' + error);
+                    }
+                });
             });
-        });
+            // Success handler
+            function handleSuccess() {
+                document.getElementById('question').value = '';
+                hideModal();
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                setTimeout(function () {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            }
 
-        document.querySelector('#faq-heading').addEventListener('click', function () {
-            var faqContent = document.querySelector('#faq-content');
-            faqContent.style.display = faqContent.style.display === 'none' ? 'block' : 'none';
-        });
+            // Failure handler
+            function handleFailure() {
+                alert('Failed to submit the question.');
+            }
 
-        var faqQuestions = document.querySelectorAll('.faq-question');
-        faqQuestions.forEach(function (element) {
-            element.addEventListener('click', function () {
-                var answer = this.nextElementSibling;
-                answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
-            });
-        });
-
-        document.querySelector('#askQuestionButton').addEventListener('click', function () {
-            document.querySelector('#askQuestionModal').style.display = 'flex'; // Use flex to center the modal
-        });
-
-        document.querySelector('#closeModal').addEventListener('click', function () {
-            document.querySelector('#askQuestionModal').style.display = 'none';
-        });
-
-        document.querySelector('#submitQuestionButton').addEventListener('click', function (e) {
-            e.preventDefault();
-            submitQuestion();
-        });
+        } else {
+            console.error("One or more elements not found.");
+        }
     });
 
-    function submitQuestion() {
-        var question = $('#question').val();
-        var productId = $('#productId').val();
-        $.ajax({
-            type: 'POST',
-            url: '/Retail/AddQuestion',
-            data: {
-                question: question, // Name should match the action parameter names
-                productId: productId // Name should match the action parameter names
-            },
-            success: function (response) {
-                console.log("Success");
-                handleSuccess();
-            },
-            error: function (error) {
-                console.log("failure");
-                handleFailure();
-            }
-        });
-    }
-
-    function handleSuccess() {
-        console.log("Entered handled success");
-        document.querySelector('#askQuestionModal').style.display = 'none';
-        document.querySelector('#question').value = '';
-        document.querySelector('#successMessage').style.display = 'block';
-        setTimeout(function () {
-            document.querySelector('#successMessage').style.display = 'none';
-        }, 5000);
-    }
-
-    function handleFailure() {
-        alert('Input Field cannot be empty');
-    }
-
-    function closeModal() {
-        document.querySelector('#askQuestionModal').style.display = 'none';
-    }
 </script>

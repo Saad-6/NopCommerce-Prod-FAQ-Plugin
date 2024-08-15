@@ -10,7 +10,7 @@
     <div class="card-group">
         <div class="card card-default">
             <div class="card-body">
-                <tr style="height: 80vh; display: flex; align-items: center; justify-content: center;">
+                <tr class="flex justify-space-center h-80vh align-center" >
                     <td colspan="3">
                         <h3 class="text-center mt-3 pt-3">No Questions Found</h3>
                     </td>
@@ -22,94 +22,104 @@
 }
 else
 {
+    <div class="cards-group">
+    <div class="card card-default">
+    <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Product </th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Filters-->
+                        <div class="flex justify-space-evenly align-center">
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Question</th>
-                <th>Product </th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Filters-->
-            <div style="display:flex;justify-content:space-evenly;align-items:center;align-content:center">
+                            <div class="flex align-center g10 m10">
+                                <div class="flex align-center">
+                                    <label for="pageSize" class="mx-3">Items per page:</label>
+                                    <input id="pageSize+@view" hidden value="@ViewBag.pageSize" />
+                                    <select style="max-width:70px; display: inline-block;" onchange="handleChange(1, '@view')" id="@view" class="form-control">
+                                        <option>@ViewBag.pageSize</option>
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
+                                        <option value="0">Show All</option>
+                                    </select>
+                                </div>
+                                <div class="flex align-center">
 
-                <div style="display: flex; align-items: center; gap: 10px;margin:10px">
-                    <div style="display: flex; align-items: center; margin: 0;">
-                        <label for="pageSize" style="margin-right: 10px;">Items per page:</label>
-                        <input id="pageSize+@view" hidden value="@ViewBag.pageSize" />
-                        <select style="max-width:70px; display: inline-block;" onchange="handleChange(1, '@view')" id="@view" class="form-control">
-                            <option >@ViewBag.pageSize</option>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                            <option value="20">20</option>
-                            <option value="0">Show All</option>
-                        </select>
-                    </div>
-                    <div style="display: flex; align-items: center; margin: 0;">
+                                    <input hidden name="view" id="filterView" value="@view" />
+                                    <label for="productQuery" style="margin-right: 10px;"></label>
+                                    <input class="form-control" id="@($"{view}Param")" placeholder="Search by Product Name" name="productName" required style="margin-right: 10px;" />
+                                    <button class="btn btn-secondary" onclick="handleChange(1, '@view')">Search</button>
 
-                        <input hidden name="view" id="filterView" value="@view" />
-                        <label for="productQuery" style="margin-right: 10px;"></label>
-                        <input class="form-control" id="@($"{view}Param")" placeholder="Search by Product Name" name="productName" required style="margin-right: 10px;" />
-                        <button class="btn btn-secondary" onclick="handleChange(1, '@view')">Search</button>
+                                </div>
+                            </div>
 
-                    </div>
-                </div>
-
-            </div>
-
-
-            @foreach (var faq in Model.Items)
-            {
-                <tr>
-                    <td>@faq.Question</td>
-                    <td>
-                        <a target="_blank" href="@Url.Action("Edit", "Product", new { id = faq.ProductId })">@faq.ProductName</a>
-                    </td>
-
-                    <td>
-
-                        <button class="btn btn-success btn-sm mb-2" onclick="openEditModal('@faq.Question', '@faq.Id', '', '_UnansweredQuestions')">Give Answer</button>
-                        <button class="btn btn-danger btn-sm" onclick="confirmDelete('@faq.Id','@view')">Delete</button>
-                    </td>
-                </tr>
-            }
+                        </div>
 
 
+                        @foreach (var faq in Model.Items)
+                        {
+                            <tr>
+                                <td>@faq.Question</td>
+                                <td>
+                                    <a target="_blank" href="@Url.Action("Edit", "Product", new { id = faq.ProductId })">@faq.ProductName</a>
+                                </td>
 
-        </tbody>
-    </table>
+                                <td>
 
-    <!--If it doesnt have a previous page and a next page , then its on the first page , and when its on the first page ,there is no need to show the page number-->
-    @if (Model.ShowPages)
-    {
+                                    <button class="btn btn-success btn-sm mb-2" onclick="openEditModal('@faq.Question', '@faq.Id', '', '_UnansweredQuestions')">Give Answer</button>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('@faq.Id','@view')">Delete</button>
+                                </td>
+                            </tr>
+                        }
 
-        <nav>
-            <ul class="pagination">
 
-                @if (Model.HasPreviousPage)
+
+                    </tbody>
+                </table>
+
+                <!--If it doesnt have a previous page and a next page , then its on the first page , and when its on the first page ,there is no need to show the page number-->
+                @if (Model.ShowPages)
                 {
-                    <li class="page-item">
-                        <a class="page-link" href="#" data-page="@(Model.PageIndex - 1)" data-view="@view">Previous</a>
-                    </li>
-                }
-                @for (int i = 1; i <= Model.TotalPages; i++)
-                {
-                    <li class="page-item @(Model.PageIndex == i ? "active" : "")">
-                        <a class="page-link" href="#" data-page="@i" data-view="@view">@i</a>
-                    </li>
-                }
-                @if (Model.HasNextPage)
-                {
-                    <li class="page-item">
-                        <a class="page-link" href="#" data-page="@(Model.PageIndex + 1)" data-view="@view">Next</a>
-                    </li>
-                }
-            </ul>
-        </nav>
-    }
 
-}
+                    <nav>
+                        <ul class="pagination">
 
+                            @if (Model.HasPreviousPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="#" data-page="@(Model.PageIndex - 1)" data-view="@view">Previous</a>
+                                </li>
+                            }
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                                    <a class="page-link" href="#" data-page="@i" data-view="@view">@i</a>
+                                </li>
+                            }
+                            @if (Model.HasNextPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="#" data-page="@(Model.PageIndex + 1)" data-view="@view">Next</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+
+                }
+
+
+    </div>
+
+    </div>
+
+    </div>
+     }
+  
