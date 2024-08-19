@@ -1,5 +1,6 @@
 ﻿using Nop.Plugin.F.A.Q.Models;
 using Nop.Services.Catalog;
+using Nop.Web.Framework.Infrastructure;
 
 
 namespace Nop.Plugin.F.A.Q.Domain;
@@ -18,7 +19,7 @@ public static class Utilities
     // No mapping required as of now since we need every attribute in the FAQ Entity in our views
     public static IList<FAQRetail> MapToViewModel(IList<FAQEntity> list)
     {
-        IList<FAQRetail> questionsViewModels = new List<FAQRetail>();
+        var questionsViewModels = new List<FAQRetail>();
         foreach (var item in list)
         {
             var questionModel = new FAQRetail();
@@ -33,6 +34,25 @@ public static class Utilities
         }
 
         return questionsViewModels;
+    }
+    public static IList<string> GetAvailableWidgetZones()
+    {
+        var availableWidgetZones = new List<string>();
+
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsTop);
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsBottom);
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsEssentialTop);
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsEssentialBottom);
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsOverviewTop);
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsOverviewBottom);
+        availableWidgetZones.Add(PublicWidgetZones.ProductReviewsPageTop);
+        availableWidgetZones.Add(PublicWidgetZones.ProductReviewsPageBottom);
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsAfterBreadcrumb);
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsAfterPictures);
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsAfterVideos);
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsBeforeCollateral);
+       
+      return availableWidgetZones;
     }
     public static string TimeAgo(DateTime dateTime)
     {
@@ -52,17 +72,17 @@ public static class Utilities
         }
         else if (timeSpan.TotalDays < 30)
         {
-            int weeks = (int)(timeSpan.TotalDays / 7);
+            var weeks = (int)(timeSpan.TotalDays / 7);
             return $"{weeks} {(weeks > 1 ? "weeks" : "week")} ago";
         }
         else if (timeSpan.TotalDays < 365)
         {
-            int months = (int)(timeSpan.TotalDays / 30);
+            var months = (int)(timeSpan.TotalDays / 30);
             return $"{months} {(months > 1 ? "months" : "month")} ago";
         }
         else
         {
-            int years = (int)(timeSpan.TotalDays / 365);
+            var years = (int)(timeSpan.TotalDays / 365);
             return $"{years} {(years > 1 ? "years" : "year")} ago";
         }
     }

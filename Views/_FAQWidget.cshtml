@@ -6,13 +6,13 @@
         string view = "_FAQWidget";
     }
 <link rel="stylesheet" href="~/Plugins/F.A.Q/Content/admin.css" />
-<div class="flex justify-content-between align-center p10"id="ask-question-div" >
+<div class="flex justify-content-between align-center p10 mb-3"id="ask-question-div" >
   
    
     <h3 id="faq-heading" style="cursor: pointer; margin: 0;">Questions About Product</h3>
     @if (Model.CurrentSettings.AllowAnoymourUsers || (!Model.CurrentSettings.AllowAnoymourUsers && Model.CurrentSettings.UserLoggedIn))
     {
-            <button id="openModalButton" class="custom-modal-button" class="btn btn-dark">Ask a Question</button>
+            <button id="openModalButton" class="custom-modal-button" class="btn btn-dark btn-sm">Ask a Question</button>
         
     }
     @if(!Model.CurrentSettings.AllowAnoymourUsers && !Model.CurrentSettings.UserLoggedIn)
@@ -22,34 +22,34 @@
 
 </div>
 
-<div id="faq-content" style="display: block; padding: 20px;">
+<div id="faq-content flex justify-space-center align-center my-2">
     <!-- Changed display to block -->
-    <div id="accordion">
+        <div id="accordion" class="">
         @if (Model.PaginatedList.Items != null && Model.PaginatedList.Items.Any())
         {
             foreach (var faq in Model.PaginatedList.Items)
             {
-                <div class="container">
+                <div class="container flex-column align-center" >
 
                     <div class="question">
                         <div class="d-flex">
                             <h5>Q:</h5>
-                            <b class="mx-1">
+                            <b class="">
                                 @faq.Question
                             </b>
                         </div>
-                        <div class="d-flex justify-content-between mt-2">
-                            <small class="small">Asked by : @faq.AskedBy</small>
+                        <div  class="d-flex justify-content-between mt-2">
+                                <small class="small">Asked by :<i>@faq.AskedBy </i> </small>
                             <small class="small">@faq.AskedTime</small>
                         </div>
                     </div>
-                    <div class="answer">
+                    <div class="answer mt-2">
                         <div class="d-flex">
                             <h5>A:</h5> <p class="mx-1">@faq.Answer</p>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <p></p>
                             <small class="small">Answerd By : @faq.AnsweredBy</small>
+                            <p></p>
                         </div>
                     </div>
                 </div>
@@ -100,6 +100,7 @@
         <div class="custom-modal-body">
             <input type="hidden" name="productId" id="productId" value="@Model.CurrentSettings.ProductId" />
             <input type="hidden" name="productName" id="productName" value="@ViewBag.ProductName" />
+            <span class="text-danger" id="validation"></span>
             <textarea maxlength="255" class="form-control" rows="5" name="question" id="question" placeholder="Your question goes here..."></textarea>
         </div>
         <div class="custom-modal-footer flex justify-space-center align-center">
@@ -118,6 +119,7 @@
 
 
 <script asp-location="Footer">
+
     document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Entered DOMContent function");
@@ -131,13 +133,24 @@
             document.getElementById('customModalBackdrop').style.display = 'none';
             document.getElementById('askQuestionModal').style.display = 'none';
         }
-
-        document.getElementById('closeModalButton').addEventListener('click', hideModal);
-        document.getElementById('customModalBackdrop').addEventListener('click', hideModal);
-
-        // Open the modal by some event (example button click)
-        document.getElementById('openModalButton').addEventListener('click', openModal);
-        document.getElementById('submitQuestionButton').addEventListener('click', submitQuestion);
+        function removeValidation(){
+            document.getElementById('validation').innerHTML = '';
+        }
+        $(document).on('click', '#openModalButton', function () {
+            openModal();
+        });
+        $(document).on('click', '#closeModalButton', function () {
+            hideModal();
+        });
+        $(document).on('click', '#customModalBackdrop', function () {
+            hideModal();
+        });
+        $(document).on('click', '#submitQuestionButton', function () {
+            submitQuestion();
+        });
+        $(document).on('input', '#question', function () {
+            removeValidation();
+        });
 
             function submitQuestion() {
                 const question = document.getElementById('question').value;
@@ -145,7 +158,7 @@
                 const productName = document.getElementById('productName').value;
 
                 if (!question.trim()) {
-                    alert('Input Field cannot be empty');
+                document.getElementById('validation').innerHTML = "Question cannot be empty";
                     return;
                 }
 
@@ -193,6 +206,7 @@
                 hideModal();
                 const successMessage = document.getElementById('successMessage');
                 successMessage.style.display = 'block';
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(function () {
                     successMessage.style.display = 'none';
                 }, 5000);

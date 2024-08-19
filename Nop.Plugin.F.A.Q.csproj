@@ -28,7 +28,6 @@
     <None Remove="Views\Shared\_RetailLayout.cshtml" />
     <None Remove="Views\_AllQuestions.cshtml" />
     <None Remove="Views\_AnsweredQuestions.cshtml" />
-    <None Remove="Views\_Configure.cshtml" />
     <None Remove="Views\_FAQWidget.cshtml" />
     <None Remove="Views\_UnansweredQuestions.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
@@ -80,9 +79,6 @@
     <Content Include="Views\Shared\_AdminPopupLayout.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\_Configure.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
 

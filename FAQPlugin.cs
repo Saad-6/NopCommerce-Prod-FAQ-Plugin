@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Data.Migrations;
 using Nop.Plugin.F.A.Q.Components;
+using Nop.Plugin.F.A.Q.Domain;
 using Nop.Services.Cms;
+using Nop.Services.Configuration;
 using Nop.Services.Plugins;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Infrastructure;
@@ -17,11 +19,13 @@ public class FAQPlugin : BasePlugin, IWidgetPlugin, IAdminMenuPlugin
     private readonly Assembly _assembly;
     private readonly IWebHelper _webHelper;
     private readonly IMigrationManager _migrationManager;
-    public FAQPlugin(IMigrationManager migrationManager, IWebHelper webHelper)
+    private readonly ISettingService _settings;
+    public FAQPlugin(IMigrationManager migrationManager, IWebHelper webHelper, ISettingService settings)
     {
         _assembly = Assembly.GetAssembly(typeof(Nop.Web.Framework.Infrastructure.Extensions.ApplicationBuilderExtensions));
         _migrationManager = migrationManager;
         _webHelper = webHelper;
+        _settings = settings;
     }
     public override Task InstallAsync()
     {
@@ -58,7 +62,9 @@ public class FAQPlugin : BasePlugin, IWidgetPlugin, IAdminMenuPlugin
 
     public Task<IList<string>> GetWidgetZonesAsync()
     {
-        return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.ProductDetailsBottom });
+        var settings = _settings.LoadSetting<FAQSettings>();
+        var widgetZone = settings.ActiveWidgetZone;
+        return Task.FromResult<IList<string>>(new List<string> { widgetZone });
     }
 
 

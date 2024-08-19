@@ -26,15 +26,14 @@ public class DashboardController : BasePluginController
 
     public async Task<IActionResult> Configure()
     {
-        //var Customer = EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync();
-        //int userid = Customer.Id;
-        //string username = Customer.Result.FirstName;
+        ViewBag.WidgetZones = Utilities.GetAvailableWidgetZones();
         var settings = _settings.LoadSetting<FAQSettings>();
         return View("~/Plugins/F.A.Q/Views/Configure.cshtml",settings);
     }
     [HttpPost]
     public IActionResult ChangeSettings(FAQSettings settings)
     {
+        ViewBag.WidgetZones = Utilities.GetAvailableWidgetZones();
         if (ModelState.IsValid)
         {
             _settings.SaveSetting(settings);
@@ -134,8 +133,8 @@ public class DashboardController : BasePluginController
         {
             count = _repo.GetCount(type);
         }
-        int pageIndex = pageNumber - 1;
-        int startIndex = (pageSize * pageIndex);
+        var pageIndex = pageNumber - 1;
+        var startIndex = (pageSize * pageIndex);
         pageSize = pageSize == -1 ? count : pageSize;
         pageSize = pageSize > count ? count : pageSize;
         var faqs = _repo.GetFAQ(type, pageSize, startIndex, sortExpression,0, productName);

@@ -19,6 +19,7 @@ public class ProductViewComponent : NopViewComponent
     private readonly ISettingService _settings;
     private readonly ICustomerService _customerService;
     private readonly IWorkContext _workContext;
+  //  private readonly IWid _sworkContext;
     public ProductViewComponent(IProductService productService, IFAQRepository repo,ISettingService setting,ICustomerService customerService,IWorkContext workContext)
     {
         _productService = productService;
@@ -29,14 +30,21 @@ public class ProductViewComponent : NopViewComponent
     }
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData , int pageNumber = 1,int pageSize = 5)
     {
+        int productId = 0;
         if (additionalData == null)
             return Content("");
-        var productId = ((ProductDetailsModel)additionalData).Id;
+        if(additionalData is ProductReviewsModel)
+        {
+            productId = ((ProductReviewsModel)additionalData).ProductId;
+        }else if( additionalData is ProductDetailsModel)
+        {
+         productId = ((ProductDetailsModel)additionalData).Id;
+        }
         var product = _productService.GetProductByIdAsync(productId);
         if (product == null || product.IsFaulted)
             return Content("");
-        int pageIndex = pageNumber - 1;
-        int startIndex = (pageSize * pageIndex);
+        var pageIndex = pageNumber - 1;
+        var startIndex = (pageSize * pageIndex);
         var settings = _settings.LoadSetting<FAQSettings>();
         var customer = EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync();
         var count = _repo.GetCount(FAQType.Answered,productId,visibility:Visibility.Visible);

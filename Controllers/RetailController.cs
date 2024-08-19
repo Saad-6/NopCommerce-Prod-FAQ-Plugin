@@ -72,8 +72,8 @@ public class RetailController : Controller
     [HttpPost]
     public IActionResult FAQWidget(int productId,int page = 1,int size = 5)
     {
-        int pageIndex = page - 1;
-        int startIndex = (size * pageIndex);
+        var pageIndex = page - 1;
+        var startIndex = (size * pageIndex);
         var faqs = _repo.GetFAQ(FAQType.Answered, size, startIndex, SortExpression.LastModified,productId,visibility:Visibility.Visible);
         var customer = EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync();
         var count = _repo.GetCount(FAQType.Answered, productId, visibility: Visibility.Visible);
