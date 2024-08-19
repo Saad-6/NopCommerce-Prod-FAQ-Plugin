@@ -1,4 +1,6 @@
 @using Nop.Core.Domain.Catalog
+@using System.Text.Encodings.Web
+
 @model PaginatedList<FAQEntity>
 @{
     string view = "_UnansweredQuestions";
@@ -71,10 +73,12 @@ else
                                     <a target="_blank" href="@Url.Action("Edit", "Product", new { id = faq.ProductId })">@faq.ProductName</a>
                                 </td>
 
-                                <td>
+                                <td >
+                                    <span class=" flex-inline align-center">
 
-                                    <button class="btn btn-success btn-sm mb-2" onclick="openEditModal('@faq.Question', '@faq.Id', '', '_UnansweredQuestions')">Give Answer</button>
-                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('@faq.Id','@view')">Delete</button>
+                                    <button class="btn btn-success btn-sm mb-2" onclick="openEditModal('@Html.Raw(JavaScriptEncoder.Default.Encode(faq.Question))', '@faq.Id', '', '_UnansweredQuestions')">Give Answer</button>
+                                    <button class="btn btn-danger btn-sm mb-2" onclick="confirmDelete('@faq.Id','@view')">Delete</button>
+                                    </span>
                                 </td>
                             </tr>
                         }
@@ -113,7 +117,7 @@ else
                     </nav>
                 }
 
-                }
+                
 
 
     </div>

@@ -1,6 +1,5 @@
 <div id="faq-widget">
-
-@model FAQViewModel
+@model FAQRetailViewModel
 @using System.Linq
     @{
         Layout = "~/Plugins/F.A.Q/Views/Shared/_RetailLayout.cshtml";
@@ -11,12 +10,12 @@
   
    
     <h3 id="faq-heading" style="cursor: pointer; margin: 0;">Questions About Product</h3>
-    @if (Model.AllowAnonymousUsers || (!Model.AllowAnonymousUsers && Model.UserLoggedIn))
+    @if (Model.CurrentSettings.AllowAnoymourUsers || (!Model.CurrentSettings.AllowAnoymourUsers && Model.CurrentSettings.UserLoggedIn))
     {
-        <button id="askQuestionButton" class="btn btn-dark">Ask a Question</button>
+            <button id="openModalButton" class="custom-modal-button" class="btn btn-dark">Ask a Question</button>
         
     }
-    @if(!Model.AllowAnonymousUsers && !Model.UserLoggedIn)
+    @if(!Model.CurrentSettings.AllowAnoymourUsers && !Model.CurrentSettings.UserLoggedIn)
     {
         <a href="@Url.Action("Login","Customer")">Login to ask a question</a>
     }
@@ -26,25 +25,22 @@
 <div id="faq-content" style="display: block; padding: 20px;">
     <!-- Changed display to block -->
     <div id="accordion">
-        @if (Model.FAQs.Items != null && Model.FAQs.Items.Any())
+        @if (Model.PaginatedList.Items != null && Model.PaginatedList.Items.Any())
         {
-            foreach (var faq in Model.FAQs.Items)
+            foreach (var faq in Model.PaginatedList.Items)
             {
                 <div class="container">
 
                     <div class="question">
                         <div class="d-flex">
-
                             <h5>Q:</h5>
                             <b class="mx-1">
                                 @faq.Question
                             </b>
-
-
                         </div>
                         <div class="d-flex justify-content-between mt-2">
-                            <small class="small">Asked by : Anonymous</small>
-                            <small class="small">@faq.AskedDate</small>
+                            <small class="small">Asked by : @faq.AskedBy</small>
+                            <small class="small">@faq.AskedTime</small>
                         </div>
                     </div>
                     <div class="answer">
@@ -53,14 +49,11 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <p></p>
-                            <small class="small">Answerd By : NopTeam</small>
+                            <small class="small">Answerd By : @faq.AnsweredBy</small>
                         </div>
                     </div>
-
                 </div>
-              
-                <hr />
-              
+                <hr /> 
             }
         }
         else
@@ -70,26 +63,26 @@
             </div>
         }
             <!-- Pagination -->
-            @if (Model.FAQs.ShowPages)
+            @if (Model.PaginatedList.ShowPages)
             {
                 <nav>
                     <ul class="pagination justify-content-center">
-                        @if (Model.FAQs.HasPreviousPage)
+                        @if (Model.PaginatedList.HasPreviousPage)
                         {
                             <li class="page-item">
-                                <a class="page-link" href="#" data-page="@(Model.FAQs.PageIndex - 1)" data-view="@view">Previous</a>
+                                <a class="page-link" href="#" data-page="@(Model.PaginatedList.PageIndex - 1)" data-view="@view">Previous</a>
                             </li>
                         }
-                        @for (int i = 1; i <= Model.FAQs.TotalPages; i++)
+                        @for (int i = 1; i <= Model.PaginatedList.TotalPages; i++)
                         {
-                            <li class="page-item @(Model.FAQs.PageIndex == i ? "active" : "")">
+                            <li class="page-item @(Model.PaginatedList.PageIndex == i ? "active" : "")">
                                 <a class="page-link" href="#" data-page="@i" data-view="@view">@i</a>
                             </li>
                         }
-                        @if (Model.FAQs.HasNextPage)
+                        @if (Model.PaginatedList.HasNextPage)
                         {
                             <li class="page-item">
-                                <a class="page-link" href="#" data-page="@(Model.FAQs.PageIndex + 1)" data-view="@view">Next</a>
+                                <a class="page-link" href="#" data-page="@(Model.PaginatedList.PageIndex + 1)" data-view="@view">Next</a>
                             </li>
                         }
                     </ul>
@@ -98,27 +91,23 @@
     </div>
 </div>
 
-<!-- Custom Modal Overlay and Content -->
-<div id="modalOverlay" class="modal-overlay"></div>
-<div id="customModal" class="custom-modal">
-    <div class="custom-modal-header">
-        <h5>Ask a Question</h5>
-        <button id="closeModalButton" class="close-button">&times;</button>
+    <div class="custom-modal-backdrop" id="customModalBackdrop"></div>
+    <div class="custom-modal" id="askQuestionModal">
+        <div class="custom-modal-header">
+            <h5 class="custom-modal-title" id="askQuestionModalLabel">Ask a Question</h5>
+            <button type="button" class="custom-modal-close" id="closeModalButton">&times;</button>
+        </div>
+        <div class="custom-modal-body">
+            <input type="hidden" name="productId" id="productId" value="@Model.CurrentSettings.ProductId" />
+            <input type="hidden" name="productName" id="productName" value="@ViewBag.ProductName" />
+            <textarea maxlength="255" class="form-control" rows="5" name="question" id="question" placeholder="Your question goes here..."></textarea>
+        </div>
+        <div class="custom-modal-footer flex justify-space-center align-center">
+            <button type="button" id="submitQuestionButton" class="custom-modal-button">Ask</button>
+        </div>
     </div>
-    <div class="custom-modal-body">
-        <form id="questionForm">
-            <div class="mb-3 form-group">
-                <label for="question" class="form-label">Question:</label>
-                <textarea rows="5" maxlength="255" required id="question" name="question" class="form-control" placeholder="Your question here ..."></textarea>
-            </div>
-            <input type="hidden" id="productId" name="productId" value="@Model.ProductId" />
-            <input type="hidden" id="productName" name="productName" value="@ViewBag.ProductName" />
-            <div class="text-center">
-                <button type="button" id="submitQuestionButton" class="btn btn-dark">Ask</button>
-            </div>
-        </form>
-    </div>
-</div>
+
+ 
 
 
 <div id="successMessage"  class="success-message">
@@ -130,58 +119,29 @@
 
 <script asp-location="Footer">
     document.addEventListener("DOMContentLoaded", function () {
+
         console.log("Entered DOMContent function");
 
-        // Directly using document.getElementById instead of jQuery for consistency
-        const modalOverlay = document.getElementById('modalOverlay');
-        const customModal = document.getElementById('customModal');
-        const askQuestionButton = document.getElementById('askQuestionButton');
-        const closeModalButton = document.getElementById('closeModalButton');
-        const submitQuestionButton = document.getElementById('submitQuestionButton');
+        function openModal() {
+            document.getElementById('customModalBackdrop').style.display = 'block';
+            document.getElementById('askQuestionModal').style.display = 'block';
+        }
 
-        // Ensure all elements exist before adding event listeners
-        if (askQuestionButton && closeModalButton && submitQuestionButton) {
+        function hideModal() {
+            document.getElementById('customModalBackdrop').style.display = 'none';
+            document.getElementById('askQuestionModal').style.display = 'none';
+        }
 
-            // Function to show the modal
-            function showModal() {
-                console.log("Entered Show Modal");
-                modalOverlay.style.display = 'block';
-                customModal.style.display = 'block';
-            }
+        document.getElementById('closeModalButton').addEventListener('click', hideModal);
+        document.getElementById('customModalBackdrop').addEventListener('click', hideModal);
 
-            // Function to hide the modal
-            function hideModal() {
-                console.log("Entered Hide Modal");
-                modalOverlay.style.display = 'none';
-                customModal.style.display = 'none';
-            }
+        // Open the modal by some event (example button click)
+        document.getElementById('openModalButton').addEventListener('click', openModal);
+        document.getElementById('submitQuestionButton').addEventListener('click', submitQuestion);
 
-            // Event listener to open the modal
-            askQuestionButton.addEventListener('click', function () {
-                console.log("askQuestion event trigger function");
-                showModal();
-            });
-
-            // Event listener to close the modal
-            closeModalButton.addEventListener('click', function () {
-                hideModal();
-            });
-
-            // Also close the modal when clicking outside of it
-            modalOverlay.addEventListener('click', function () {
-                hideModal();
-            });
-
-            // Handle form submission
-            submitQuestionButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                console.log("Entered Submit Ask function");
-                submitQuestion();
-            });
-            // AJAX form submission logic
             function submitQuestion() {
                 const question = document.getElementById('question').value;
-                const productId = @Model.ProductId;
+                const productId = @Model.CurrentSettings.ProductId;
                 const productName = document.getElementById('productName').value;
 
                 if (!question.trim()) {
@@ -214,7 +174,7 @@
                     url: '@Url.Action("FAQWidget", "Retail")',
                     type: 'POST',
                     data: {
-                        productId: @Model.ProductId,
+                        productId: @Model.CurrentSettings.ProductId,
                         page: page,
                         size: 5
                     },
@@ -243,9 +203,6 @@
                 alert('Failed to submit the question.');
             }
 
-        } else {
-            console.error("One or more elements not found.");
-        }
     });
 
 </script>

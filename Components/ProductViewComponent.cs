@@ -40,21 +40,18 @@ public class ProductViewComponent : NopViewComponent
         var settings = _settings.LoadSetting<FAQSettings>();
         var customer = EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync();
         var count = _repo.GetCount(FAQType.Answered,productId,visibility:Visibility.Visible);
-        //var faqs = _repo.LoadForProduct(productId,true);
         var faqs = _repo.GetFAQ(FAQType.Answered, pageSize, startIndex, SortExpression.LastModified, productId, visibility: Visibility.Visible);
-        var paginatedList = new PaginatedList<FAQEntity>(faqs, count, pageNumber, pageSize);
-        var fAQViewModel = new FAQViewModel()
-        {
-            ProductId = productId,
-            FAQs = paginatedList,
-            Question = "N/A",
-            ProductName = product.Result.Name,
-            AllowAnonymousUsers = settings.AllowAnonymousUsersToAskFAQs,
-            UserLoggedIn = customer.Result.FirstName != null,
-            
-        };
+        var faqRetailViewList = Utilities.MapToViewModel(faqs);
+        var paginatedList = new PaginatedList<FAQRetail>(faqRetailViewList, count, pageNumber, pageSize);
+        var retailViewModel = new FAQRetailViewModel();
+        retailViewModel.PaginatedList = paginatedList;
+        retailViewModel.CurrentSettings.AnsweredBy = settings.AnsweredBy;
+        retailViewModel.CurrentSettings.AllowAnoymourUsers = settings.AllowAnonymousUsersToAskFAQs;
+        retailViewModel.CurrentSettings.UserLoggedIn = customer.Result.Username != null;
+        retailViewModel.CurrentSettings.ProductId = productId;
+
         ViewBag.ProductName = product.Result.Name;
-        return View("~/Plugins/F.A.Q/Views/_FAQWidget.cshtml", fAQViewModel);
+        return View("~/Plugins/F.A.Q/Views/_FAQWidget.cshtml", retailViewModel);
 
     }
 }

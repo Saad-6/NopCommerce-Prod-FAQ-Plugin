@@ -36,7 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
-    <PackageReference Include="PagedList" Version="1.17.0" />
     <PackageReference Include="X.Web.PagedList" Version="10.1.2" />
   </ItemGroup>
 

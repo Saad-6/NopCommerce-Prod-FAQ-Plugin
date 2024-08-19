@@ -16,18 +16,18 @@ public static class Utilities
         return type;
     }
     // No mapping required as of now since we need every attribute in the FAQ Entity in our views
-    public static IList<QuestionsViewModel> MapToViewModel(IList<FAQEntity> list)
+    public static IList<FAQRetail> MapToViewModel(IList<FAQEntity> list)
     {
-        IList<QuestionsViewModel> questionsViewModels = new List<QuestionsViewModel>();
+        IList<FAQRetail> questionsViewModels = new List<FAQRetail>();
         foreach (var item in list)
         {
-            var questionModel = new QuestionsViewModel();
+            var questionModel = new FAQRetail();
             questionModel.Question = item.Question;
             questionModel.Answer = item.Answer;
-            questionModel.Id = item.Id;
             questionModel.ProductName = item.ProductName;
-            questionModel.LastModified = item.LastModified;
-            questionModel.Visibility  = item.Visibility;
+            questionModel.AnsweredBy = item.AnsweredBy;
+            questionModel.AskedBy = item.UserName;
+            questionModel.AskedTime = TimeAgo(item.AskedDate);
             questionsViewModels.Add(questionModel);
         
         }

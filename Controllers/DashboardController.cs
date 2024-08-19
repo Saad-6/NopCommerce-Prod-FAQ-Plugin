@@ -127,6 +127,8 @@ public class DashboardController : BasePluginController
         if (!string.IsNullOrEmpty(productName))
         {
             count = _repo.GetCount(type,productName:productName);
+            pageNumber = 1;
+            pageSize = count;
         }
         else
         {
@@ -137,7 +139,6 @@ public class DashboardController : BasePluginController
         pageSize = pageSize == -1 ? count : pageSize;
         pageSize = pageSize > count ? count : pageSize;
         var faqs = _repo.GetFAQ(type, pageSize, startIndex, sortExpression,0, productName);
-     //   faqs = Utilities.MapToViewModel(faqs);
         var list = new PaginatedList<FAQEntity>(faqs, count, pageNumber, pageSize);
         ViewBag.pageSize = pageSize;
         return PartialView($"~/Plugins/F.A.Q/Views/{view}.cshtml", list);

@@ -11,6 +11,9 @@ public class FAQEntity : BaseEntity
     public string ProductName {  get; set; }
     public DateTime AskedDate { get; set; }
     public DateTime LastModified {  get; set; }
+    public string UserName { get; set; }
+    public string AnsweredBy { get; set; }
+
     public FAQEntity()
     {
         Visibility = true;

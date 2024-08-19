@@ -7,6 +7,7 @@ using Nop.Plugin.F.A.Q.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Nop.Plugin.F.A.Q.Controllers;
 public class RetailController : Controller
@@ -26,7 +27,9 @@ public class RetailController : Controller
     [HttpPost]
     public IActionResult AddQuestion(string question , int productId, string productName)
     {
-        
+        string answeredBy;
+        string customerName;
+        var customer = EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync();
         if (string.IsNullOrEmpty(question) || productId == 0)
         {
             return BadRequest();
@@ -35,6 +38,23 @@ public class RetailController : Controller
         {
             productName = _product.GetProductByIdAsync(productId).Result.Name;
         }
+        var settings = _settings.LoadSetting<FAQSettings>();
+        if (!string.IsNullOrEmpty(settings.AnsweredBy))
+        {
+            answeredBy = settings.AnsweredBy;
+        }
+        else
+        {
+            answeredBy = "NopTeam";
+        }
+        if (!string.IsNullOrEmpty(customer.Result.FirstName))
+        {
+            customerName = customer.Result.FirstName;
+        }
+        else
+        {
+            customerName = "Anonymous";
+        }
         var faq = new FAQEntity();
         faq.Question = question;
         faq.ProductId = productId;
@@ -42,6 +62,9 @@ public class RetailController : Controller
         faq.LastModified = DateTime.Now;
         faq.ProductName = productName;
         faq.Visibility = true;
+        faq.AnsweredBy = answeredBy;
+        faq.Upvotes = 0;
+        faq.UserName = customerName;
         _repo.Crud(faq,Operation.Create);
 
         return Ok(new { message = "Question added successfully" });
@@ -56,18 +79,15 @@ public class RetailController : Controller
         var count = _repo.GetCount(FAQType.Answered, productId, visibility: Visibility.Visible);
         //var faqs = _repo.LoadForProduct(productId,true);
         var settings = _settings.LoadSetting<FAQSettings>();
-        var paginatedList = new PaginatedList<FAQEntity>(faqs, count, page, size);
-        var fAQViewModel = new FAQViewModel()
-        {
-            ProductId = productId,
-            FAQs = paginatedList,
-            Question = "N/A",
-            ProductName ="",
-            AllowAnonymousUsers = settings.AllowAnonymousUsersToAskFAQs,
-            UserLoggedIn = customer.Result.FirstName != null,
-
-        };
-        return View("~/Plugins/F.A.Q/Views/_FAQWidget.cshtml", fAQViewModel);
+        var faqRetailViewList = Utilities.MapToViewModel(faqs);
+        var paginatedList = new PaginatedList<FAQRetail>(faqRetailViewList, count, page, size);
+        var retailViewModel = new FAQRetailViewModel();
+        retailViewModel.PaginatedList = paginatedList;
+        retailViewModel.CurrentSettings.AnsweredBy = settings.AnsweredBy;
+        retailViewModel.CurrentSettings.AllowAnoymourUsers = settings.AllowAnonymousUsersToAskFAQs;
+        retailViewModel.CurrentSettings.UserLoggedIn = customer.Result.Username != null;
+        retailViewModel.CurrentSettings.ProductId = productId;
+        return View("~/Plugins/F.A.Q/Views/_FAQWidget.cshtml", retailViewModel);
     }
 
 }

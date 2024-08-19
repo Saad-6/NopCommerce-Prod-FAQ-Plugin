@@ -15,7 +15,9 @@ public class FAQBuilder : NopEntityBuilder<FAQEntity>
             .WithColumn(nameof(FAQEntity.ProductId)).AsInt32().NotNullable()
             .WithColumn(nameof(FAQEntity.Visibility)).AsByte().NotNullable()
             .WithColumn(nameof(FAQEntity.AskedDate)).AsDateTime().NotNullable()
-            .WithColumn(nameof(FAQEntity.LastModified)).AsDateTime().Nullable();
+            .WithColumn(nameof(FAQEntity.LastModified)).AsDateTime().Nullable()
+            .WithColumn(nameof(FAQEntity.AnsweredBy)).AsString().Nullable()
+            .WithColumn(nameof(FAQEntity.UserName)).AsString().Nullable();
             
     }
 }
