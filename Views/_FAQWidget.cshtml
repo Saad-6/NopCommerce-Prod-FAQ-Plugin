@@ -9,7 +9,21 @@
 <div class="flex justify-content-between align-center p10 mb-3"id="ask-question-div" >
   
    
-    <h3 id="faq-heading" style="cursor: pointer; margin: 0;">Questions About Product</h3>
+    <div id="faq-heading" style="cursor: pointer; margin: 0;">
+            @if (Model.PaginatedList.Items != null && Model.PaginatedList.Items.Any())
+            {    
+       <h3>
+           Questions about this product
+       </h3>
+            }
+            else
+            {
+                <h4>
+                Be the first one to ask a question about this product
+                </h4>
+            }
+       
+    </div>
     @if (Model.CurrentSettings.AllowAnoymourUsers || (!Model.CurrentSettings.AllowAnoymourUsers && Model.CurrentSettings.UserLoggedIn))
     {
             <button id="openModalButton" class="custom-modal-button" class="btn btn-dark btn-sm">Ask a Question</button>
@@ -22,12 +36,10 @@
 
 </div>
 
-<div id="faq-content">
+<div class="content" id="faq-content">
     <!-- Changed display to block -->
-   
-        @if (Model.PaginatedList.Items != null && Model.PaginatedList.Items.Any())
-        {
-            foreach (var faq in Model.PaginatedList.Items)
+        
+            @foreach (var faq in Model.PaginatedList.Items)
             {
                     <div class="faq-container">
 
@@ -38,30 +50,29 @@
                                 @faq.Question
                             </b>
                         </div>
-                        <div  class="d-flex justify-content-between askedAndAnswered">
-                                <small class="small">Asked by :<i>@faq.AskedBy </i> </small>
+                        <div  class="d-flex justify-content-between askedAndAnsweredBy">
+                            <small class="small"><i>Asked by : @faq.AskedBy </i> </small>
                             <small class="small">@faq.AskedTime</small>
                         </div>
                     </div>
-                    <div class="answer-container mt-2">
+                    <div class="answer-container">
                         <div class="d-flex">
                             <h5>A:</h5> <p class="QnAs">@faq.Answer</p>
                         </div>
-                        <div class="d-flex justify-content-between askedAndAnswered">
-                            <small class="small">Answerd By : @faq.AnsweredBy</small>
+                        <div class="d-flex justify-content-between askedAndAnsweredBy">
+                            <small class="small">
+                                <i>
+                                Answerd By : @faq.AnsweredBy
+                                </i>
+                                </small>
                             <p></p>
                         </div>
                     </div>
                 </div>
                 <hr /> 
             }
-        }
-        else
-        {
-            <div class="p10">
-                No FAQs available.
-            </div>
-        }
+        
+       
             <!-- Pagination -->
             @if (Model.PaginatedList.ShowPages)
             {
@@ -101,7 +112,7 @@
             <input type="hidden" name="productId" id="productId" value="@Model.CurrentSettings.ProductId" />
             <input type="hidden" name="productName" id="productName" value="@ViewBag.ProductName" />
             <span class="text-danger" id="validation"></span>
-            <textarea maxlength="255" class="form-control" rows="5" name="question" id="question" placeholder="Your question goes here..."></textarea>
+            <textarea maxlength="255" class="form-control" rows="7" name="question" id="question" placeholder="Your question goes here..."></textarea>
         </div>
         <div class="custom-modal-footer flex justify-space-center align-center">
             <button type="button" id="submitQuestionButton" class="custom-modal-button">Ask</button>
@@ -119,7 +130,15 @@
 
 
 <script asp-location="Footer">
+    $(document).ready(function () {
+        // Find the container div that has a child div with id "faq-widget"
+        var containerDiv = $(".container").filter(function () {
+            return $(this).children("#faq-widget").length > 0;
+        });
 
+        // Change the class of the container div to "product-essentials"
+        containerDiv.addClass("product-essentials").removeClass("container");
+    });
     document.addEventListener("DOMContentLoaded", function () {
 
         console.log("Entered DOMContent function");
@@ -209,7 +228,7 @@
             successMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 setTimeout(function () {
                     successMessage.style.display = 'none';
-                }, 5000);
+                }, 10000);
             }
 
             // Failure handler

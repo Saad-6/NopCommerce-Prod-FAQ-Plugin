@@ -36,25 +36,26 @@ public static class Utilities
     }
 
     // These will be displayed in configuration ,user can choose where to display the widget from this list
-    public static IList<string> GetAvailableWidgetZones()
+    public static IDictionary<string, string> GetAvailableWidgetZones()
     {
-        var availableWidgetZones = new List<string>();
+        var availableWidgetZones = new Dictionary<string, string>();
 
-        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsTop);
-        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsBottom);
-        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsEssentialTop);
-        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsEssentialBottom);
-        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsOverviewTop);
-        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsOverviewBottom);
-        availableWidgetZones.Add(PublicWidgetZones.ProductReviewsPageTop);
-        availableWidgetZones.Add(PublicWidgetZones.ProductReviewsPageBottom);
-        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsAfterBreadcrumb);
-        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsAfterPictures);
-        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsAfterVideos);
-        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsBeforeCollateral);
-       
-      return availableWidgetZones;
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsTop, "Product Details - Top");
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsBottom, "Product Details - Bottom");
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsEssentialTop, "Product Details Essential - Top");
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsEssentialBottom, "Product Details Essential - Bottom");
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsOverviewTop, "Product Details Overview - Top");
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsOverviewBottom, "Product Details Overview - Bottom");
+        availableWidgetZones.Add(PublicWidgetZones.ProductReviewsPageTop, "Product Reviews Page - Top");
+        availableWidgetZones.Add(PublicWidgetZones.ProductReviewsPageBottom, "Product Reviews Page - Bottom");
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsAfterBreadcrumb, "Product Details - After Breadcrumb");
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsAfterPictures, "Product Details - After Pictures");
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsAfterVideos, "Product Details - After Videos");
+        availableWidgetZones.Add(PublicWidgetZones.ProductDetailsBeforeCollateral, "Product Details - Before Collateral");
+
+        return availableWidgetZones;
     }
+
     public static string TimeAgo(DateTime dateTime)
     {
         var timeSpan = DateTime.Now.Subtract(dateTime);
