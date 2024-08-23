@@ -10,7 +10,6 @@ using Nop.Services.Customers;
 using Nop.Web.Framework.Components;
 using Nop.Web.Models.Catalog;
 
-
 namespace Nop.Plugin.F.A.Q.Components;
 public class ProductViewComponent : NopViewComponent
 {
@@ -19,7 +18,6 @@ public class ProductViewComponent : NopViewComponent
     private readonly ISettingService _settings;
     private readonly ICustomerService _customerService;
     private readonly IWorkContext _workContext;
-  //  private readonly IWid _sworkContext;
     public ProductViewComponent(IProductService productService, IFAQRepository repo,ISettingService setting,ICustomerService customerService,IWorkContext workContext)
     {
         _productService = productService;
@@ -57,8 +55,8 @@ public class ProductViewComponent : NopViewComponent
         retailViewModel.CurrentSettings.AllowAnoymourUsers = settings.AllowAnonymousUsersToAskFAQs;
         retailViewModel.CurrentSettings.UserLoggedIn = customer.Result.Username != null;
         retailViewModel.CurrentSettings.ProductId = productId;
-
         ViewBag.ProductName = product.Result.Name;
+
         return View("~/Plugins/F.A.Q/Views/_FAQWidget.cshtml", retailViewModel);
 
     }

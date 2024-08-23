@@ -75,7 +75,6 @@ public class FAQRepository : IFAQRepository
         }
         return true;
     }
-
     public int GetCount(FAQType type = FAQType.All, int productId = 0,string productName = "", Visibility visibility = Visibility.Undefined)
     {
         var query = _dataContext.GetTable<FAQEntity>().AsQueryable();
@@ -99,7 +98,7 @@ public class FAQRepository : IFAQRepository
         }
         if (!string.IsNullOrEmpty(productName))
         {
-            query = query.Where(m=>m.ProductName == productName);
+            query = query.Where(m=>m.ProductName.Contains(productName));
         }
         return query.Count();
     }

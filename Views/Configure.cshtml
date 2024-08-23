@@ -8,16 +8,16 @@
 <div class="container vh-100 d-flex align-items-center justify-content-center">
     <div class="card shadow-sm p-4 w-50">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="card-title m-0">FAQ Settings</h3>
-            <a href='@Url.Action("Index","Dashboard")' class="btn btn-link">Back</a>
+            <h3 class="card-title m-0">Questions Settings</h3>
+            <a href='@Url.Action("Index","Questions")' class="btn btn-link">Back</a>
         </div>
 
-        <form method="post" class="form" asp-controller="Dashboard" asp-action="ChangeSettings">
+        <form method="post" class="form" asp-controller="Questions" asp-action="Configure">
             <div class="form-group">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-8">
 
-                <label class="form-label">Allow Anonymous Users to Ask FAQs</label>
+                <label class="form-label">Allow Anonymous Users to Ask Questions</label>
                     </div> 
                     <div class="col-md-4">
 
@@ -36,12 +36,20 @@
                 </div>
             </div>
             <div class="form-group">
-                <select class="form-control" asp-for="ActiveWidgetZone">
-                    @foreach(var widgetZone in widgetZones)
-                    {
-                        <option value="@widgetZone">@widgetZone</option>
-                    }
-                </select>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Widget's location in Product Details Page</label>
+                    </div> 
+                    <div class="col-md-6">
+                        <select class="form-control" asp-for="ActiveWidgetZone">
+                            @foreach (var widgetZone in widgetZones)
+                            {
+                                <option value="@widgetZone">@widgetZone</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+              
 
             </div>
 

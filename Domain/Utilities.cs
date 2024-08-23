@@ -1,5 +1,4 @@
 ﻿using Nop.Plugin.F.A.Q.Models;
-using Nop.Services.Catalog;
 using Nop.Web.Framework.Infrastructure;
 
 
@@ -35,6 +34,8 @@ public static class Utilities
 
         return questionsViewModels;
     }
+
+    // These will be displayed in configuration ,user can choose where to display the widget from this list
     public static IList<string> GetAvailableWidgetZones()
     {
         var availableWidgetZones = new List<string>();

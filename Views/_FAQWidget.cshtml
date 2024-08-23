@@ -22,32 +22,32 @@
 
 </div>
 
-<div id="faq-content flex justify-space-center align-center my-2">
+<div id="faq-content">
     <!-- Changed display to block -->
-        <div id="accordion" class="">
+   
         @if (Model.PaginatedList.Items != null && Model.PaginatedList.Items.Any())
         {
             foreach (var faq in Model.PaginatedList.Items)
             {
-                <div class="container flex-column align-center" >
+                    <div class="faq-container">
 
-                    <div class="question">
+                    <div class="question-container">
                         <div class="d-flex">
                             <h5>Q:</h5>
-                            <b class="">
+                            <b class="QnAs">
                                 @faq.Question
                             </b>
                         </div>
-                        <div  class="d-flex justify-content-between mt-2">
+                        <div  class="d-flex justify-content-between askedAndAnswered">
                                 <small class="small">Asked by :<i>@faq.AskedBy </i> </small>
                             <small class="small">@faq.AskedTime</small>
                         </div>
                     </div>
-                    <div class="answer mt-2">
+                    <div class="answer-container mt-2">
                         <div class="d-flex">
-                            <h5>A:</h5> <p class="mx-1">@faq.Answer</p>
+                            <h5>A:</h5> <p class="QnAs">@faq.Answer</p>
                         </div>
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between askedAndAnswered">
                             <small class="small">Answerd By : @faq.AnsweredBy</small>
                             <p></p>
                         </div>
@@ -88,7 +88,7 @@
                     </ul>
                 </nav>
             }
-    </div>
+   
 </div>
 
     <div class="custom-modal-backdrop" id="customModalBackdrop"></div>

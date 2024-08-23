@@ -12,12 +12,12 @@ using Nop.Web.Framework.Mvc.Filters;
 [Area(AreaNames.ADMIN)]
 [AutoValidateAntiforgeryToken]
 [AuthorizeAdmin]
-public class DashboardController : BasePluginController
+public class QuestionsController : BasePluginController
 {
     private readonly IFAQRepository _repo;
     private readonly IProductService _service;
     private readonly ISettingService _settings;
-    public DashboardController(IFAQRepository repo,IProductService service,ISettingService setting)
+    public QuestionsController(IFAQRepository repo,IProductService service,ISettingService setting)
     {
         _repo = repo;
         _service = service;
@@ -30,7 +30,7 @@ public class DashboardController : BasePluginController
         var settings = _settings.LoadSetting<FAQSettings>();
         return View("~/Plugins/F.A.Q/Views/Configure.cshtml",settings);
     }
-    [HttpPost]
+    [HttpPost, ActionName("Configure")]
     public IActionResult ChangeSettings(FAQSettings settings)
     {
         ViewBag.WidgetZones = Utilities.GetAvailableWidgetZones();
@@ -52,12 +52,7 @@ public class DashboardController : BasePluginController
         var pageIndex = page - 1;
         var startIndex = 0;
         var settings = _settings.LoadSetting<FAQSettings>();
-        // This will pass the faq model to the function which will map the entites to view model
-        // Which isnt required right now because we need every memeber of FAQ Entity in our views so no point in mapping 
-        // because we will be exposing all our entity members anyways
         //   var allFaqs =  Utilities.MapViewModel( _repo.GetFAQ(FAQType.All,size,startIndex),_service);
-        //var unAnswered =Utilities.MapViewModel( _repo.GetFAQ(FAQType.Unanswered, size,startIndex),_service);
-        //var answered =Utilities.MapViewModel( _repo.GetFAQ(FAQType.Answered, size, startIndex),_service);
         var allFaqs = _repo.GetFAQ(FAQType.All, size, startIndex, sortExpression);
         var answered = _repo.GetFAQ(FAQType.Answered, size, startIndex, sortExpression);
         var unAnswered = _repo.GetFAQ(FAQType.Unanswered, size, startIndex, sortExpression);
@@ -68,26 +63,19 @@ public class DashboardController : BasePluginController
             Unanswered = new PaginatedList<FAQEntity>(unAnswered, unansweredCount, page, size),
             FAQSettings = settings,
         };
-        ViewBag.pageSize = size;
+        ViewBag.pageSize = size ;
         ViewBag.page = page;
         return View("~/Plugins/F.A.Q/Views/AdminIndex.cshtml", jointModel);
     }
     [HttpPost]
-  
-    
     public IActionResult UpdateAnswer(int faqId, string view, string answer )
     {
-
         var faq = _repo.LoadById(faqId);
-
         if (faq == null || string.IsNullOrEmpty(view) || string.IsNullOrEmpty(answer))
         {
             return Json(new { success = false, message = "Invalid input." });
         }
-
         faq.Answer = answer;
-        
-
         faq.LastModified = DateTime.Now;
         _repo.Crud(faq, Operation.Update);
         return ReturnPartialView(view);
@@ -127,6 +115,7 @@ public class DashboardController : BasePluginController
         {
             count = _repo.GetCount(type,productName:productName);
             pageNumber = 1;
+          // Uncomment this line if you want to display every search result on a single page
             pageSize = count;
         }
         else
@@ -135,11 +124,12 @@ public class DashboardController : BasePluginController
         }
         var pageIndex = pageNumber - 1;
         var startIndex = (pageSize * pageIndex);
-        pageSize = pageSize == -1 ? count : pageSize;
+        pageSize = pageSize == 0 ? count : pageSize;
         pageSize = pageSize > count ? count : pageSize;
-        var faqs = _repo.GetFAQ(type, pageSize, startIndex, sortExpression,0, productName);
+        var faqs = _repo.GetFAQ(type, pageSize, startIndex, sortExpression,productName:productName);
         var list = new PaginatedList<FAQEntity>(faqs, count, pageNumber, pageSize);
         ViewBag.pageSize = pageSize;
+        
         return PartialView($"~/Plugins/F.A.Q/Views/{view}.cshtml", list);
     }
    

@@ -51,7 +51,7 @@ public class FAQPlugin : BasePlugin, IWidgetPlugin, IAdminMenuPlugin
     public override string GetConfigurationPageUrl()
     {
 
-        return $"{_webHelper.GetStoreLocation()}Admin/Dashboard/Configure";
+        return $"{_webHelper.GetStoreLocation()}Admin/Questions/Configure";
     }
 
     public Type GetWidgetViewComponent(string widgetZone)
@@ -73,8 +73,8 @@ public class FAQPlugin : BasePlugin, IWidgetPlugin, IAdminMenuPlugin
         var menuItem = new SiteMapNode()
         {
             SystemName = "FAQPlugin",
-            Title = "Manage FAQs",
-            ControllerName = "Dashboard",
+            Title = "Manage Questions",
+            ControllerName = "Questions",
             ActionName = "Index",
             IconClass = "fa fa-dot-circle",
             Visible = true,

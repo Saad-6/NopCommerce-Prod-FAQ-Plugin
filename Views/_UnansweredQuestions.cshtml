@@ -1,10 +1,6 @@
-@using Nop.Core.Domain.Catalog
-@using System.Text.Encodings.Web
-
 @model PaginatedList<FAQEntity>
 @{
-    string view = "_UnansweredQuestions";
-    
+    string view = "_UnansweredQuestions";   
 }
 
 @if (Model.Items.Count < 1)
@@ -43,6 +39,7 @@ else
                                 <div class="flex align-center">
                                     <label for="pageSize" class="mx-3">Items per page:</label>
                                     <input id="pageSize+@view" hidden value="@ViewBag.pageSize" />
+                                    <input hidden id="hiddenProductName" value="@ViewBag.ProductName"/>
                                     <select style="max-width:70px; display: inline-block;" onchange="handleChange(1, '@view')" id="@view" class="form-control">
                                         <option>@ViewBag.pageSize</option>
                                         <option value="5">5</option>
@@ -56,7 +53,7 @@ else
 
                                     <input hidden name="view" id="filterView" value="@view" />
                                     <label for="productQuery" style="margin-right: 10px;"></label>
-                                    <input class="form-control" id="@($"{view}Param")" placeholder="Search by Product Name" name="productName" required style="margin-right: 10px;" />
+                                    <input class="form-control" id="@($"{view}Param")" value="@ViewBag.ProductName" placeholder = @(ViewBag.ProductName ?? "Search by Product Name ...")  name="productName" required style="margin-right: 10px;" />
                                     <button class="btn btn-secondary" onclick="handleChange(1, '@view')">Search</button>
 
                                 </div>

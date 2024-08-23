@@ -71,9 +71,12 @@ border-radius:5px;
     justify-content:space-between;
     align-items:center;
 }
-#setting{
-margin:10px;
-padding:10px;
+.heading-content{
+    margin:0px 10px;
+}
+#setting {
+  margin: 10px;
+  padding: 10px;
 }
 .check{
     margin:30px;
@@ -90,15 +93,40 @@ padding:10px;
   align-items: center;
   justify-content: center;
 }
+.faq-container {
+  max-width: 700px;
+  margin: 0 auto; /* Center horizontally */
+  display: grid;
+  grid-template-rows: 50% 50%;
+  height: auto;
+}
+.question-container {
+  /* Align question to the left */
+  text-align: left;
+}
+
+.answer-container {
+  /* Align answer to the left and indent slightly */
+  text-align: left;
+  text-indent: 20px; /* Adjust indentation as needed */
+}
+.askedAndAnswered{
+    margin-top:auto;
+}
+.QnAs{
+    height:fit-content;
+}
 #faq-content {
-    /*
+  /*
 
   display: block;
     */
+  word-wrap: break-word;
+  hyphens: auto;
   padding: 20px;
 }
-.question, .answer {
-  max-width: 700px;
+.question-container, .answer-container {
+  padding: 20px;
   display: grid;
   grid-template-rows: 50% 50%;
   height: auto;
@@ -189,14 +217,9 @@ margin-top:auto;
   .custom-modal-button:hover {
     background-color: #495057;
   }
-#question {
-  height: auto;
-  min-height: 50px; /* Adjust this value to set the minimum height */
-  resize: vertical;
-}
 @media (max-width: 576px) {
 
-.question{
+.question-container{
     font-size: 14px;
   }
 #faq-heading{
@@ -206,20 +229,20 @@ margin-top:auto;
     font-size: 12px;
     padding: 5px 10px;
   }
-  .answer {
+  .answer-container{
     font-size: 12px;
   }
  .align-center{
-     align-content:flex-start;
-     align-items:flex-start;
+  
+     align-items:center;
  }
-  .d-flex {
-  /*
-
-    flex-direction: column;
-  */
+  .align-start {
+    align-items: flex-start;
   }
-
+  .justify-content-start{
+      justify-content:flex-start;
+  }
+  
   .justify-content-between {
     justify-content: flex-start;
   }
