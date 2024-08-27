@@ -18,6 +18,18 @@
 
     <None Remove="Content\admin.css" />
 
+    <None Remove="Localization\Resources.de-DE.xml" />
+
+    <None Remove="Localization\Resources.en-US.xml" />
+
+    <None Remove="Localization\Resources.es-ES.xml" />
+
+    <None Remove="Localization\Resources.fr-FR.xml" />
+
+    <None Remove="Localization\Resources.it-IT.xml" />
+
+    <None Remove="Localization\Resources.ur-PK.xml" />
+
     <None Remove="plugin.json" />
     <None Remove="Views\AdminIndex.cshtml" />
     <None Remove="Views\Configure.cshtml" />
@@ -41,6 +53,24 @@
 
   <ItemGroup>
     <Content Include="Content\admin.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Localization\Resources.de-DE.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Localization\Resources.en-US.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Localization\Resources.es-ES.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Localization\Resources.fr-FR.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Localization\Resources.it-IT.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Localization\Resources.ur-PK.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Configure.cshtml">

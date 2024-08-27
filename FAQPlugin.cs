@@ -1,11 +1,14 @@
 ﻿using System.Reflection;
+using DocumentFormat.OpenXml.Drawing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
 using Nop.Plugin.F.A.Q.Components;
 using Nop.Plugin.F.A.Q.Domain;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Infrastructure;
@@ -27,22 +30,32 @@ public class FAQPlugin : BasePlugin, IWidgetPlugin, IAdminMenuPlugin
         _webHelper = webHelper;
         _settings = settings;
     }
-    public override Task InstallAsync()
+    public override async Task InstallAsync()
     {
         _migrationManager.ApplyUpMigrations(_assembly);
-        return base.InstallAsync();
+        //Add Plugin Supported Languages
+        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+        var languageService = EngineContext.Current.Resolve<ILanguageService>();
+        var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+        await LanguageSettings.ImportLanguagesAsync(languageService, localizationService, fileProvider);
+
+        await base.InstallAsync();
     }
-    public override Task UninstallAsync()
+    public override async Task UninstallAsync()
     {
+        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+        var languageService = EngineContext.Current.Resolve<ILanguageService>();
         try
         {
-            _migrationManager.ApplyDownMigrations(_assembly);
+           await LanguageSettings.RemovePluginResourcesAsync(languageService, localizationService);
+             _migrationManager.ApplyDownMigrations(_assembly);
+
         }
         catch (Exception ex)
         {
-
+         
         }
-        return base.UninstallAsync();
+        await base.UninstallAsync();
     }
   
 

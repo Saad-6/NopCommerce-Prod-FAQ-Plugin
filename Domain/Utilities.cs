@@ -1,4 +1,9 @@
-﻿using Nop.Plugin.F.A.Q.Models;
+﻿using Nop.Core.Domain.Localization;
+using Nop.Core.Infrastructure;
+using Nop.Data;
+using Nop.Data.DataProviders;
+using Nop.Plugin.F.A.Q.Models;
+using Nop.Services.Localization;
 using Nop.Web.Framework.Infrastructure;
 
 
@@ -34,7 +39,6 @@ public static class Utilities
 
         return questionsViewModels;
     }
-
     // These will be displayed in configuration ,user can choose where to display the widget from this list
     public static IDictionary<string, string> GetAvailableWidgetZones()
     {
@@ -55,7 +59,6 @@ public static class Utilities
 
         return availableWidgetZones;
     }
-
     public static string TimeAgo(DateTime dateTime)
     {
         var timeSpan = DateTime.Now.Subtract(dateTime);
@@ -88,6 +91,5 @@ public static class Utilities
             return $"{years} {(years > 1 ? "years" : "year")} ago";
         }
     }
-
 
 }

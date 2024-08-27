@@ -13,25 +13,25 @@
             @if (Model.PaginatedList.Items != null && Model.PaginatedList.Items.Any())
             {    
        <h3>
-           Questions about this product
+                    @T("Plugins.F.A.Q.Questions_About_This_Product")
        </h3>
             }
             else
             {
                 <h4>
-                Be the first one to ask a question about this product
+                    @T("Plugins.F.A.Q.Be_First_To_Ask")
                 </h4>
             }
        
     </div>
     @if (Model.CurrentSettings.AllowAnoymourUsers || (!Model.CurrentSettings.AllowAnoymourUsers && Model.CurrentSettings.UserLoggedIn))
     {
-            <button id="openModalButton" class="custom-modal-button" class="btn btn-dark btn-sm">Ask a Question</button>
+            <button id="openModalButton" class="custom-modal-button" class="btn btn-dark btn-sm">@T("Plugins.F.A.Q.Ask_a_Question")</button>
         
     }
     @if(!Model.CurrentSettings.AllowAnoymourUsers && !Model.CurrentSettings.UserLoggedIn)
     {
-        <a href="@Url.Action("Login","Customer")">Login to ask a question</a>
+            <a href="@Url.Action("Login","Customer")">@T("Plugins.F.A.Q.Login_To_Ask_A_Question")</a>
     }
 
 </div>
@@ -51,7 +51,7 @@
                             </b>
                         </div>
                         <div  class="d-flex justify-content-between askedAndAnsweredBy">
-                            <small class="small"><i>Asked by : @faq.AskedBy </i> </small>
+                            <small class="small"><i>@T("Plugins.F.A.Q.Asked_By") : @faq.AskedBy </i> </small>
                             <small class="small">@faq.AskedTime</small>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                         <div class="d-flex justify-content-between askedAndAnsweredBy">
                             <small class="small">
                                 <i>
-                                Answerd By : @faq.AnsweredBy
+                                @T("Plugins.F.A.Q.Answered_By") : @faq.AnsweredBy
                                 </i>
                                 </small>
                             <p></p>
@@ -105,17 +105,17 @@
     <div class="custom-modal-backdrop" id="customModalBackdrop"></div>
     <div class="custom-modal" id="askQuestionModal">
         <div class="custom-modal-header">
-            <h5 class="custom-modal-title" id="askQuestionModalLabel">Ask a Question</h5>
+            <h5 class="custom-modal-title" id="askQuestionModalLabel">@T("Plugins.F.A.Q.Ask_A_Question")</h5>
             <button type="button" class="custom-modal-close" id="closeModalButton">&times;</button>
         </div>
         <div class="custom-modal-body">
             <input type="hidden" name="productId" id="productId" value="@Model.CurrentSettings.ProductId" />
             <input type="hidden" name="productName" id="productName" value="@ViewBag.ProductName" />
             <span class="text-danger" id="validation"></span>
-            <textarea maxlength="255" class="form-control" rows="7" name="question" id="question" placeholder="Your question goes here..."></textarea>
+            <textarea maxlength="255" class="form-control" rows="7" name="question" id="question" placeholder=@T("Plugins.F.A.Q.Question")></textarea>
         </div>
         <div class="custom-modal-footer flex justify-space-center align-center">
-            <button type="button" id="submitQuestionButton" class="custom-modal-button">Ask</button>
+            <button type="button" id="submitQuestionButton" class="custom-modal-button">@T("Plugins.F.A.Q.Ask")</button>
         </div>
     </div>
 
@@ -123,7 +123,9 @@
 
 
 <div id="successMessage"  class="success-message">
-    <h4>Your question has been received and is currently under review. We'll provide an answer as soon as possible.</h4>
+    <h4>
+            @T("Plugins.F.A.Q.Success_Message")
+    </h4>
     </div>
 
 </div>
