@@ -45,7 +45,7 @@
 
                     <div class="question-container">
                         <div class="d-flex">
-                            <h5>Q:</h5>
+                            <h5 class="mr-5">Q:</h5>
                             <b class="QnAs">
                                 @faq.Question
                             </b>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="answer-container">
                         <div class="d-flex">
-                            <h5>A:</h5> <p class="QnAs">@faq.Answer</p>
+                        <h5 class="mr-5">A:</h5> <p class="QnAs">@faq.Answer</p>
                         </div>
                         <div class="d-flex justify-content-between askedAndAnsweredBy">
                             <small class="small">
@@ -112,7 +112,7 @@
             <input type="hidden" name="productId" id="productId" value="@Model.CurrentSettings.ProductId" />
             <input type="hidden" name="productName" id="productName" value="@ViewBag.ProductName" />
             <span class="text-danger" id="validation"></span>
-            <textarea maxlength="255" class="form-control" rows="7" name="question" id="question" placeholder=@T("Plugins.F.A.Q.Question")></textarea>
+            <textarea maxlength="255" class="form-control" rows="5" name="question" id="question" placeholder=@T("Plugins.F.A.Q.Question")></textarea>
         </div>
         <div class="custom-modal-footer flex justify-space-center align-center">
             <button type="button" id="submitQuestionButton" class="custom-modal-button">@T("Plugins.F.A.Q.Ask")</button>

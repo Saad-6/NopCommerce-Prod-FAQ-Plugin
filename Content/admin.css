@@ -29,7 +29,6 @@ justify-content:flex-start;
 .justify-space-end{
 justify-content:flex-end;
 }
-
 .justify-space-around{
     justify-content:space-around;
 }
@@ -57,6 +56,9 @@ justify-content:flex-end;
 }
 .h-100vh {
   height: 100vh;
+}
+.mr-5{
+    margin-right:5px;
 }
 #accordion{
     margin-top:50px;
@@ -98,44 +100,31 @@ justify-content:flex-end;
   justify-content: center;
 }
 .faq-container {
-    /*
-  max-width: 700px;
-
-  display: grid;
-  grid-template-rows: 50% 50%;
-    */
     display:flex;
     flex-direction:column;
-  margin: 0 auto; /* Center horizontally */
+  margin: 0 auto; 
   height: auto;
 }
+textarea {
+  height: auto; 
+}
 .question-container {
-  /* Align question to the left */
   text-align: left;
 }
-
 .answer-container {
-  /* Align answer to the left and indent slightly */
   text-align: left;
-  
 }
 .askedAndAnsweredBy{
     margin-top:10px;
-    /*
-
-    */
 }
 .QnAs{
     height:fit-content;
+ 
 }
 #faq-content {
-  /*
-
-  display: block;
-    */
   word-wrap: break-word;
   hyphens: auto;
-  padding: 20px;
+  padding: 20px 20px 0px 20px;
 }
 .question-container, .answer-container {
   padding: 10px 0px;
@@ -168,7 +157,6 @@ margin-top:auto;
   display: none;
   z-index: 9998;
 }
-
 /* Modal container */
 .custom-modal {
   position: fixed;
@@ -183,7 +171,6 @@ margin-top:auto;
   display: none;
   border-radius: 8px;
 }
-
 /* Modal header */
 .custom-modal-header {
   padding: 15px;
@@ -192,31 +179,26 @@ margin-top:auto;
   justify-content: space-between;
   align-items: center;
 }
-
 .custom-modal-title {
   margin: 0;
   font-size: 18px;
 }
-
 .custom-modal-close {
   cursor: pointer;
   background: none;
   border: none;
   font-size: 20px;
 }
-
 /* Modal body */
 .custom-modal-body {
   padding: 15px;
 }
-
 /* Modal footer */
 .custom-modal-footer {
   padding: 15px;
   border-top: 1px solid #ddd;
   text-align: right;
 }
-
 .custom-modal-button {
   background-color: #343a40;
   color: white;
@@ -225,7 +207,6 @@ margin-top:auto;
   border-radius: 5px;
   cursor: pointer;
 }
-
   .custom-modal-button:hover {
     background-color: #495057;
   }
@@ -239,9 +220,6 @@ margin-top:auto;
 }
   .askedAndAnsweredBy {
     margin-top: 6px;
-    /*
-
-    */
   }
 #faq-heading{
     font-size:16px;
@@ -254,7 +232,6 @@ margin-top:auto;
     font-size: 12px;
   }
  .align-center{
-  
      align-items:center;
  }
   .align-start {
@@ -263,11 +240,9 @@ margin-top:auto;
   .justify-content-start{
       justify-content:flex-start;
   }
-  
   .justify-content-between {
     justify-content: flex-start;
   }
-
   .question b, .answer p {
     text-align: left;
   }

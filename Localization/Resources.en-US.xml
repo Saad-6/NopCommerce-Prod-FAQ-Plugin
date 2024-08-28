@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Language Name="English" SupportedVersion="4.70">
     <LocaleResource Name="Plugins.F.A.Q.UnAnswered_Questions">
-        <Value>UnAnswered Questions</Value>
+        <Value>Unanswered Questions</Value>
     </LocaleResource>
     <LocaleResource Name="Plugins.F.A.Q.Answered_Questions">
         <Value>Answered Questions</Value>
@@ -16,7 +16,7 @@
         <Value>Give Answer</Value>
     </LocaleResource>   
      <LocaleResource Name="Plugins.F.A.Q.Edit_Answer">
-        <Value>Edit Answer</Value>
+        <Value>Edit</Value>
     </LocaleResource>  
         <LocaleResource Name="Plugins.F.A.Q.Field_Required">
         <Value>Field is required</Value>
@@ -52,7 +52,7 @@
         <Value>Actions</Value>
     </LocaleResource>   
         <LocaleResource Name="Plugins.F.A.Q.Visibility">
-        <Value>Visibility</Value>
+        <Value> </Value>
     </LocaleResource> 
         <LocaleResource Name="Plugins.F.A.Q.No_Questions_Found">
         <Value>No Questions Found</Value>
@@ -104,10 +104,10 @@
         <Value>Your question has been received and is currently under review. We'll provide an answer as soon as possible.</Value>
     </LocaleResource>   
         <LocaleResource Name="Plugins.F.A.Q.Be_First_To_Ask">
-        <Value> Be the first one to ask a question about this product.</Value>
+        <Value> Be the first one to ask a question about this product</Value>
     </LocaleResource> 
         <LocaleResource Name="Plugins.F.A.Q.Questions_About_This_Product">
-        <Value> Questons About This Product.</Value>
+        <Value> Questions About This Product</Value>
     </LocaleResource>  
         <LocaleResource Name="Plugins.F.A.Q.Question_Goes_Here">
         <Value>Your question goes here...</Value>

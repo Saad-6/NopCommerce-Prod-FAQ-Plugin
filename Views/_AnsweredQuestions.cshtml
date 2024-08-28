@@ -96,19 +96,19 @@
                                     @faq.LastModified
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="row">
-                                        <button class="btn btn-secondary mb-2"
+                                    <div class="btn-group" role="group" aria-label="FAQ Actions">
+                                        <button class="btn btn-secondary btn-sm"
                                                 onclick="openEditModal('@Html.Raw(JavaScriptEncoder.Default.Encode(faq.Question.Replace("\"", "\\\"")))', '@faq.Id', '@Html.Raw(JavaScriptEncoder.Default.Encode(faq.Answer.Replace("\"", "\\\"")))', '@view')">
                                             @T("Plugins.F.A.Q.Edit_Answer")
                                         </button>
+                                        <button class="btn btn-danger btn-sm" onclick="confirmDelete('@faq.Id','@view')">
+                                            @T("Plugins.F.A.Q.Delete")
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" onclick="toggleVisibility('@faq.Id','@view','@faq.Visibility')">
+                                            @T("Plugins.F.A.Q.Visibility") <i class="fa @(faq.Visibility ? "fa-eye" : "fa-eye-slash")"></i>
+                                        </button>
                                     </div>
-                                    <div class="row">
-                                        <button class="btn btn-danger btn-sm mb-2" onclick="confirmDelete('@faq.Id','@view')">@T("Plugins.F.A.Q.Delete")</button>
-                                    </div>
-                                    <div class="row">
 
-                                        <button class="btn btn-primary btn-sm" onclick="toggleVisibility('@faq.Id','@view','@faq.Visibility')">@T("Plugins.F.A.Q.Visibility"): <i class="fa @(faq.Visibility ? "fa-eye" : "fa-eye-slash")"></i></button>
-                                    </div>
                                    
                                    
                                    

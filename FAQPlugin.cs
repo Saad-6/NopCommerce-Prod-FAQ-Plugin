@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using DocumentFormat.OpenXml.Drawing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -11,12 +10,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Infrastructure;
 using Nop.Web.Framework.Menu;
-
-
-
-
 public class FAQPlugin : BasePlugin, IWidgetPlugin, IAdminMenuPlugin
 {
     private readonly Assembly _assembly;
@@ -33,11 +27,10 @@ public class FAQPlugin : BasePlugin, IWidgetPlugin, IAdminMenuPlugin
     public override async Task InstallAsync()
     {
         _migrationManager.ApplyUpMigrations(_assembly);
+
         //Add Plugin Supported Languages
-        var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-        var languageService = EngineContext.Current.Resolve<ILanguageService>();
-        var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-        await LanguageSettings.ImportLanguagesAsync(languageService, localizationService, fileProvider);
+       
+        await LanguageSettings.ImportLanguagesAsync();
 
         await base.InstallAsync();
     }
@@ -47,7 +40,7 @@ public class FAQPlugin : BasePlugin, IWidgetPlugin, IAdminMenuPlugin
         var languageService = EngineContext.Current.Resolve<ILanguageService>();
         try
         {
-           await LanguageSettings.RemovePluginResourcesAsync(languageService, localizationService);
+           await LanguageSettings.RemovePluginResourcesAsync();
              _migrationManager.ApplyDownMigrations(_assembly);
 
         }
@@ -57,30 +50,21 @@ public class FAQPlugin : BasePlugin, IWidgetPlugin, IAdminMenuPlugin
         }
         await base.UninstallAsync();
     }
-  
-
     public bool HideInWidgetList => false;
-
     public override string GetConfigurationPageUrl()
     {
-
         return $"{_webHelper.GetStoreLocation()}Admin/Questions/Configure";
     }
-
     public Type GetWidgetViewComponent(string widgetZone)
     {
         return typeof(ProductViewComponent);
-  
     }
-
     public Task<IList<string>> GetWidgetZonesAsync()
     {
         var settings = _settings.LoadSetting<FAQSettings>();
         var widgetZone = settings.ActiveWidgetZone;
         return Task.FromResult<IList<string>>(new List<string> { widgetZone });
     }
-
-
     public Task ManageSiteMapAsync(SiteMapNode rootNode)
     {
         var menuItem = new SiteMapNode()
